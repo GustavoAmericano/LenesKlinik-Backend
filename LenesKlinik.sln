@@ -3,21 +3,28 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LenesKlinik.Core", "LenesKlinik.Core\LenesKlinik.Core.csproj", "{B514468E-374B-4F77-8B5C-601049269B70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LenesKlinik.Core", "LenesKlinik.Core\LenesKlinik.Core.csproj", "{B514468E-374B-4F77-8B5C-601049269B70}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{6B30D9A7-4F02-4014-8EF5-8DA0FF599949}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LenesKlinik.Core.Entities", "LenesKlinik.Core.Entities\LenesKlinik.Core.Entities.csproj", "{64D04669-D40D-42B9-9A1C-6BF4684051FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LenesKlinik.Core.Entities", "LenesKlinik.Core.Entities\LenesKlinik.Core.Entities.csproj", "{64D04669-D40D-42B9-9A1C-6BF4684051FB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{4F3CD00C-32D1-475A-8771-F3CB5A7E2D80}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{A0A70BD4-783B-4A37-A499-E26ACBE99A86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LenesKlinik.Data", "LenesKlinik.Data\LenesKlinik.Data.csproj", "{21EC6CB1-EC4E-47E8-8169-16FE6E4E8AB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LenesKlinik.Data", "LenesKlinik.Data\LenesKlinik.Data.csproj", "{21EC6CB1-EC4E-47E8-8169-16FE6E4E8AB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LenesKlinik.RestApi", "LenesKlinik.RestApi\LenesKlinik.RestApi.csproj", "{BA8CF4ED-CDCA-487C-B111-1E03E59F706D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LenesKlinik.RestApi", "LenesKlinik.RestApi\LenesKlinik.RestApi.csproj", "{BA8CF4ED-CDCA-487C-B111-1E03E59F706D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{5FEB603B-9880-4902-BC19-5E3111DACBAC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Travis", "Travis", "{6A107B7A-53A6-468A-930B-94822E4E04B3}"
+	ProjectSection(SolutionItems) = preProject
+		.travis.yml = .travis.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkTest", "WorkTest\WorkTest.csproj", "{FCC8BF13-775E-4BF4-A25C-CBFA65793988}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +48,10 @@ Global
 		{BA8CF4ED-CDCA-487C-B111-1E03E59F706D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA8CF4ED-CDCA-487C-B111-1E03E59F706D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA8CF4ED-CDCA-487C-B111-1E03E59F706D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCC8BF13-775E-4BF4-A25C-CBFA65793988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCC8BF13-775E-4BF4-A25C-CBFA65793988}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCC8BF13-775E-4BF4-A25C-CBFA65793988}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCC8BF13-775E-4BF4-A25C-CBFA65793988}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +61,7 @@ Global
 		{64D04669-D40D-42B9-9A1C-6BF4684051FB} = {6B30D9A7-4F02-4014-8EF5-8DA0FF599949}
 		{21EC6CB1-EC4E-47E8-8169-16FE6E4E8AB1} = {4F3CD00C-32D1-475A-8771-F3CB5A7E2D80}
 		{BA8CF4ED-CDCA-487C-B111-1E03E59F706D} = {A0A70BD4-783B-4A37-A499-E26ACBE99A86}
+		{FCC8BF13-775E-4BF4-A25C-CBFA65793988} = {5FEB603B-9880-4902-BC19-5E3111DACBAC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6A4E6EFD-8796-4AF5-99BA-043FC7F0502E}
