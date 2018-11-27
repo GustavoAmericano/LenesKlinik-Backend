@@ -42,5 +42,21 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
                 throw new Exception("Error loading entities from database!");
             }
         }
+
+        public void DeleteWork(int workId)
+        {
+            try
+            {
+                _repo.DeleteWork(workId);
+            }
+            catch (InvalidOperationException e)
+            {
+                throw new Exception(e.Message);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error deleting entity from database!");
+            }
+        }
     }
 }

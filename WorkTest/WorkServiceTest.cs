@@ -114,7 +114,7 @@ namespace WorkTest
 
 #region READ
         [Fact]
-        public void GetAllWorkTest()
+        public void GetAllWorkSuccessTest()
         {
             var mock = new Mock<IWorkRepository>();
             IWorkService service = new WorkService(mock.Object);
@@ -123,6 +123,31 @@ namespace WorkTest
 
             mock.Verify(repo => repo.GetAllWork(), Times.Once);
             Assert.Equal(2,returnWork.Count());
+        }
+
+
+
+        #endregion
+
+        #region READ
+        [Fact]
+        public void DeleteWorkSuccessTest()
+        {
+            var mock = new Mock<IWorkRepository>();
+            IWorkService service = new WorkService(mock.Object);
+            mock.Setup(repo => repo.DeleteWork(It.IsAny<int>()));
+            service.DeleteWork(1);
+
+            mock.Verify(repo => repo.DeleteWork(1), Times.Once);
+        }
+
+
+        #endregion
+        private IWorkService GetWorkService()
+        {
+            var mock = new Mock<IWorkRepository>();
+            IWorkService service = new WorkService(mock.Object);
+            return service;
         }
 
         private IEnumerable<Work> GetMockWork()
@@ -148,14 +173,6 @@ namespace WorkTest
                     ImageUrl = "Image.png"
                 },
             };
-        }
-
-        #endregion
-        private IWorkService GetWorkService()
-        {
-            var mock = new Mock<IWorkRepository>();
-            IWorkService service = new WorkService(mock.Object);
-            return service;
         }
 
     }

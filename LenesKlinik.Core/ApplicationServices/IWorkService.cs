@@ -7,5 +7,6 @@ namespace LenesKlinik.Core.ApplicationServices
     {
         Work CreateWork(Work work);
         IEnumerable<Work> GetAllWork();
+        void DeleteWork(int workId);
     }
 }
