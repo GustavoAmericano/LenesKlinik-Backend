@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using LenesKlinik.Core.ApplicationServices;
 using LenesKlinik.Core.ApplicationServices.Implementation;
 using LenesKlinik.Core.DomainServices;
@@ -8,6 +10,7 @@ using Xunit;
 
 namespace WorkTest
 {
+#region CREATE
     public class WorkServiceTest
     {
         [Fact]
@@ -106,9 +109,49 @@ namespace WorkTest
             Exception e = Assert.Throws<ArgumentOutOfRangeException>(() => service.CreateWork(w));
             Assert.Contains("Price cannot be 0 or less!", e.Message);
         }
-    
 
-    private IWorkService GetWorkService()
+        #endregion
+
+#region READ
+        [Fact]
+        public void GetAllWorkTest()
+        {
+            var mock = new Mock<IWorkRepository>();
+            IWorkService service = new WorkService(mock.Object);
+            mock.Setup(repo => repo.GetAllWork()).Returns(GetMockWork);
+            var returnWork = service.GetAllWork();
+
+            mock.Verify(repo => repo.GetAllWork(), Times.Once);
+            Assert.Equal(2,returnWork.Count());
+        }
+
+        private IEnumerable<Work> GetMockWork()
+        {
+            return new List<Work>()
+            {
+                new Work
+                {
+                    Id = 1,
+                    Title = "Massage",
+                    Description = "A nice massage",
+                    Duration = 30,
+                    Price = 299.99,
+                    ImageUrl = "Image.png"
+                },
+                new Work
+                {
+                    Id = 2,
+                    Title = "Raindrop Massage",
+                    Description = "A nice massage",
+                    Duration = 30,
+                    Price = 299.99,
+                    ImageUrl = "Image.png"
+                },
+            };
+        }
+
+        #endregion
+        private IWorkService GetWorkService()
         {
             var mock = new Mock<IWorkRepository>();
             IWorkService service = new WorkService(mock.Object);
