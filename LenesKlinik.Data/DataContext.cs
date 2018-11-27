@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LenesKlinik.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace LenesKlinik.Data
 {
@@ -8,16 +9,20 @@ namespace LenesKlinik.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<Work>()
+                .HasKey(w => w.Id);
             //modelBuilder.Entity<User>()
-             //   .HasKey(u => u.Id);
+            //   .HasKey(u => u.Id);
 
             //modelBuilder.Entity<Pet>()
-              //  .HasOne(p => p.Owner)
-              //  .WithMany(o => o.Pets)
-              //  .OnDelete(DeleteBehavior.SetNull);
+            //  .HasOne(p => p.Owner)
+            //  .WithMany(o => o.Pets)
+            //  .OnDelete(DeleteBehavior.SetNull);
         }
 
         //public DbSet<User> Users { get; set; }
+        public DbSet<Work> Work { get; set; }
 
 
     }

@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LenesKlinik.Core.ApplicationServices;
+using LenesKlinik.Core.ApplicationServices.Implementation;
+using LenesKlinik.Core.DomainServices;
 using LenesKlinik.Data;
+using LenesKlinik.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -53,6 +57,8 @@ namespace LenesKlinik.RestApi
 
             // Dependency Inject stuff
             //services.AddScoped<IPetRepository, PetRepo>();
+            services.AddScoped<IWorkService, WorkService>();
+            services.AddScoped<IWorkRepository, WorkRepository>();
 
             // Ensure we do not loop entities within entities.
             // E.g. When getting a specific pet,
@@ -62,8 +68,6 @@ namespace LenesKlinik.RestApi
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

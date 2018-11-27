@@ -3,7 +3,7 @@ using Xunit;
 
 namespace WorkTest
 {
-    public class UnitTest1
+    public class WorkEntityTest
     {
         [Fact]
         public void Test1()
