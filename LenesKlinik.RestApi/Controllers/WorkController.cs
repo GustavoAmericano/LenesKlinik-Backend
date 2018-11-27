@@ -18,11 +18,19 @@ namespace LenesKlinik.RestApi.Controllers
         {
             _service = service;
         }
+
         //GET api/values
         [HttpGet]
-        public ActionResult<Work> Get()
+        public ActionResult<List<Work>> Get()
         {
-            return new Work();
+            try
+            {
+                return _service.GetAllWork().ToList();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         //// GET api/values/5

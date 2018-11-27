@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using LenesKlinik.Core.DomainServices;
 using LenesKlinik.Core.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,18 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             catch (Exception)
             {
                 throw new  Exception("Error storing entity in database!");
+            }
+        }
+
+        public IEnumerable<Work> GetAllWork()
+        {
+            try
+            {
+                return _repo.GetAllWork();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error loading entities from database!");
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using LenesKlinik.Core.DomainServices;
 using LenesKlinik.Core.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,18 @@ namespace LenesKlinik.Data.Repositories
                 _ctx.Attach(work).State = EntityState.Added;
                 _ctx.SaveChanges();
                 return work;
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
+        }
+
+        public IEnumerable<Work> GetAllWork()
+        {
+            try
+            {
+                return _ctx.Work;
             }
             catch (Exception)
             {
