@@ -24,9 +24,13 @@ namespace WorkTest
             _service = new WorkService(mock.Object);
             Work w = _work[0];
 
+            mock.Setup(repo => repo.UpdateWork(It.IsAny<Work>()))
+                .Returns<Work>(x => x);
             mock.Setup(repo => repo.DeleteWork(It.IsAny<int>()));
-            mock.Setup(repo => repo.GetAllWork()).Returns(GetMockWork);
-            mock.Setup(repo => repo.CreateWork(It.IsAny<Work>())).Returns(new Work
+            mock.Setup(repo => repo.GetAllWork())
+                .Returns(GetMockWork);
+            mock.Setup(repo => repo.CreateWork(It.IsAny<Work>()))
+                .Returns(new Work
             {
                 Id = 1,
                 Title = w.Title,
@@ -113,10 +117,87 @@ namespace WorkTest
 
 
         #endregion
-        private IWorkService GetWorkService()
+
+        #region UPDATE
+
+        [Fact]
+        public void EditWorkSuccessTest()
         {
-            return null;
+            Work w = _work[0];
+            w.Title = "Edited title";
+
+            Work returnWork = _service.UpdateWork(1, w);
+
+            mock.Verify(repo => repo.UpdateWork(w), Times.Once);
+            Assert.Equal("Edited title", w.Title);
         }
+
+        [Fact]
+        public void UpdateWorkIdMismatchExpectArgumentExceptionTest()
+        {
+            Work w = _work[0];
+
+            Exception e = Assert.Throws<ArgumentException>(() => _service.UpdateWork(1337, w));
+
+            Assert.Equal("Id mismatch", e.Message);
+        }
+
+        [Fact]
+        public void UpdateWorkNoTitleExpectArgmentExceptionTest()
+        {
+            Work w = _work[0];
+            w.Title = null;
+
+            Exception e = Assert.Throws<ArgumentException>(() => _service.UpdateWork(1, w));
+
+            Assert.Equal("Title empty or null!", e.Message);
+        }
+
+        [Fact]
+        public void UpdateWorkNoTitleExpectArgumentExceptionTest()
+        {
+            Work w = _work[0];
+            w.Title = null;
+            Exception e = Assert.Throws<ArgumentException>(() => _service.UpdateWork(1, w));
+            Assert.Equal("Title empty or null!", e.Message);
+            mock.Verify(repo => repo.CreateWork(w), Times.Never);
+        }
+
+        [Fact]
+        public void UpdateWorkNoDescriptionExpectArgumentExceptionTest()
+        {
+            Work w = _work[0];
+            w.Description = null;
+            Exception e = Assert.Throws<ArgumentException>(() => _service.UpdateWork(1, w));
+            Assert.Equal("Description empty or null!", e.Message);
+            mock.Verify(repo => repo.CreateWork(w), Times.Never);
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0)]
+        public void UpdateWorkInvalidDurationExpectArgumentExceptionTest(int duration)
+        {
+            Work w = _work[0];
+            w.Duration = duration;
+            Exception e = Assert.Throws<ArgumentException>(() => _service.UpdateWork(1, w));
+            Assert.Equal("Duration cannot be 0 or less!", e.Message);
+            mock.Verify(repo => repo.CreateWork(w), Times.Never);
+        }
+
+        [Theory]
+        [InlineData(-1.00)]
+        [InlineData(0.00)]
+        public void UpdateWorkInvalidPriceExpectArgumentExceptionTest(double price)
+        {
+            Work w = _work[0];
+            w.Price = price;
+            Exception e = Assert.Throws<ArgumentException>(() => _service.UpdateWork(1, w));
+            Assert.Equal("Price cannot be 0 or less!", e.Message);
+            mock.Verify(repo => repo.CreateWork(w), Times.Never);
+        }
+
+        #endregion
 
         private IEnumerable<Work> GetMockWork()
         {
