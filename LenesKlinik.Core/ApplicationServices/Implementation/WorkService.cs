@@ -19,8 +19,8 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
         {
             if(string.IsNullOrEmpty(work.Description)) throw new ArgumentException("Description empty or null!");
             if(string.IsNullOrEmpty(work.Title)) throw new ArgumentException("Title empty or null!");
-            if(work.Duration <= 0) throw new ArgumentOutOfRangeException("Duration","Duration cannot be 0 or less!");
-            if(work.Price <= 0) throw new ArgumentOutOfRangeException("Price", "Price cannot be 0 or less!");
+            if(work.Duration <= 0) throw new ArgumentException("Duration cannot be 0 or less!");
+            if(work.Price <= 0) throw new ArgumentException("Price cannot be 0 or less!");
             try
             {
                 return _repo.CreateWork(work);
