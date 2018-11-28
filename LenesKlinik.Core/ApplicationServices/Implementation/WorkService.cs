@@ -17,13 +17,15 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
 
         public Work CreateWork(Work work)
         {
-            if(string.IsNullOrEmpty(work.Description)) throw new ArgumentException("Description empty or null!");
-            if(string.IsNullOrEmpty(work.Title)) throw new ArgumentException("Title empty or null!");
-            if(work.Duration <= 0) throw new ArgumentException("Duration cannot be 0 or less!");
-            if(work.Price <= 0) throw new ArgumentException("Price cannot be 0 or less!");
+
             try
             {
+                ValidateWork(work);
                 return _repo.CreateWork(work);
+            }
+            catch (ArgumentException)
+            {
+                throw;
             }
             catch (Exception)
             {
@@ -57,6 +59,32 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             {
                 throw new Exception("Error deleting entity from database!");
             }
+        }
+
+        public Work UpdateWork(int workId, Work work)
+        {
+            if(workId != work.Id) throw new ArgumentException("Id mismatch");
+            try
+            {
+                ValidateWork(work);
+                return _repo.UpdateWork(work);
+            }
+            catch (ArgumentException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error updating entity in database!");
+            }
+        }
+
+        public void ValidateWork(Work work)
+        {
+            if (string.IsNullOrEmpty(work.Description)) throw new ArgumentException("Description empty or null!");
+            if (string.IsNullOrEmpty(work.Title)) throw new ArgumentException("Title empty or null!");
+            if (work.Duration <= 0) throw new ArgumentException("Duration cannot be 0 or less!");
+            if (work.Price <= 0) throw new ArgumentException("Price cannot be 0 or less!");
         }
     }
 }

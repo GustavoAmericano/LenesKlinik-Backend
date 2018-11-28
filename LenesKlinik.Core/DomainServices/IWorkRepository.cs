@@ -10,5 +10,6 @@ namespace LenesKlinik.Core.DomainServices
         Work CreateWork(Work work);
         IEnumerable<Work> GetAllWork();
         void DeleteWork(int workId);
+        Work UpdateWork(Work work);
     }
 }
