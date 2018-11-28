@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using LenesKlinik.Core.Entities;
 
@@ -8,5 +9,6 @@ namespace LenesKlinik.Core.DomainServices
     {
         Work CreateWork(Work work);
         IEnumerable<Work> GetAllWork();
+        void DeleteWork(int workId);
     }
 }
