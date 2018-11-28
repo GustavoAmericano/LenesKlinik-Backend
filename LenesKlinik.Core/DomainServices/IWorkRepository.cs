@@ -11,5 +11,6 @@ namespace LenesKlinik.Core.DomainServices
         IEnumerable<Work> GetAllWork();
         void DeleteWork(int workId);
         Work UpdateWork(Work work);
+        Work GetWorkById(int workId);
     }
 }

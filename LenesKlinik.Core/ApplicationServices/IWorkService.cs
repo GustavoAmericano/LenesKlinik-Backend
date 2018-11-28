@@ -9,5 +9,6 @@ namespace LenesKlinik.Core.ApplicationServices
         IEnumerable<Work> GetAllWork();
         void DeleteWork(int workId);
         Work UpdateWork(int workId, Work work);
+        Work GetWorkById(int workId);
     }
 }

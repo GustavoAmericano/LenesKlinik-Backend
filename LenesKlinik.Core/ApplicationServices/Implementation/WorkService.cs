@@ -45,6 +45,22 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             }
         }
 
+        
+        public Work GetWorkById(int workId)
+        {
+            Work work;
+            try
+            {
+                work = _repo.GetWorkById(workId);
+            }
+            catch (Exception)
+            {
+               throw new Exception("Error fetching entity from database!");
+            }
+            if (work == null) throw new ArgumentException($"No entity found with id {workId}!");
+            return work;
+        }
+
         public void DeleteWork(int workId)
         {
             try
@@ -78,6 +94,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
                 throw new Exception("Error updating entity in database!");
             }
         }
+
 
         public void ValidateWork(Work work)
         {

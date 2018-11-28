@@ -33,12 +33,12 @@ namespace LenesKlinik.RestApi.Controllers
             }
         }
 
-        //// GET api/values/5
-        //[HttpGet("{id}")]
-        //public ActionResult<string> Get(int id)
-        //{
-        //    return "value";
-        //}
+        // GET api/work/5
+        [HttpGet("{id}")]
+        public ActionResult<Work> Get(int id)
+        {
+            return _service.GetWorkById(id);
+        }
 
         // POST api/work
         [HttpPost]
