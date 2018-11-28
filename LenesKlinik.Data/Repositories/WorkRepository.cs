@@ -10,7 +10,7 @@ namespace LenesKlinik.Data.Repositories
 {
     public class WorkRepository : IWorkRepository
     {
-        private DataContext _ctx;
+        private readonly DataContext _ctx;
 
         public WorkRepository(DataContext ctx)
         {
@@ -46,9 +46,16 @@ namespace LenesKlinik.Data.Repositories
 
         public void DeleteWork(int workId)
         {
-            _ctx.Work.Remove(_ctx.Work.FirstOrDefault(wo => wo.Id == workId)
-                             ?? throw new InvalidOperationException($"No entity with id {workId}"));
-            _ctx.SaveChanges();
+            try
+            {
+                _ctx.Work.Remove(_ctx.Work.FirstOrDefault(wo => wo.Id == workId)
+                                 ?? throw new InvalidOperationException($"No entity with id {workId}"));
+                _ctx.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
         }
 
         public Work UpdateWork(Work work)
@@ -60,11 +67,23 @@ namespace LenesKlinik.Data.Repositories
                 _ctx.Attach(work).State = EntityState.Modified;
                 _ctx.SaveChanges();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw new Exception("Failed to update pet in database!");
+                throw new Exception();
             }
             return work;
+        }
+
+        public Work GetWorkById(int workId)
+        {
+            try
+            {
+                return _ctx.Work.FirstOrDefault(work => work.Id == workId);
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
         }
     }
 }

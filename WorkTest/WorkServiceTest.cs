@@ -24,6 +24,8 @@ namespace WorkTest
             _service = new WorkService(mock.Object);
             Work w = _work[0];
 
+            mock.Setup(repo => repo.GetWorkById(It.IsAny<int>()))
+                .Returns<int>(id => _work.FirstOrDefault(work => work.Id == id));
             mock.Setup(repo => repo.UpdateWork(It.IsAny<Work>()))
                 .Returns<Work>(x => x);
             mock.Setup(repo => repo.DeleteWork(It.IsAny<int>()));
@@ -105,6 +107,23 @@ namespace WorkTest
             mock.Verify(repo => repo.GetAllWork(), Times.Once);
             Assert.Equal(2, returnWork.Count());
         }
+
+        [Fact]
+        public void GetWorkByIdSuccessTest()
+        {
+            Work w = _service.GetWorkById(1);
+            Assert.Equal(1, w.Id);
+            mock.Verify(repo => repo.GetWorkById(1), Times.Once);
+        }
+
+        [Fact]
+        public void GetWorkByIdInvalidIdExpectArgumentExceptionTest()
+        {
+            Exception e = Assert.Throws<ArgumentException>(() => _service.GetWorkById(9999));
+            Assert.Equal($"No entity found with id {9999}!", e.Message);
+            mock.Verify(repo => repo.GetWorkById(9999), Times.Once);
+        }
+
         #endregion
 
         #region DELETE
