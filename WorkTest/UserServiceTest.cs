@@ -6,7 +6,6 @@ using LenesKlinik.Core.ApplicationServices;
 using LenesKlinik.Core.ApplicationServices.Implementation;
 using LenesKlinik.Core.DomainServices;
 using LenesKlinik.Core.Entities;
-using LenesKlinik.Core.Entities.DTO;
 using Moq;
 using Xunit;
 
@@ -17,23 +16,23 @@ namespace WorkTest
         private IUserService _service;
         private Mock<IUserRepository> _mock;
         private List<User> _users;
-        private UserCreateInput _inputUser;
+        private User _createUser;
+        private string _strongPass;
 
         public UserServiceTest()
         {
             _users = new List<User>(GetMockUsers());
             _mock = new Mock<IUserRepository>();
             _service = new UserService(_mock.Object);
-            _inputUser = new UserCreateInput
+            _strongPass = "Str0ngP4$$";
+            _createUser = new User
             {
-                SecretNumber = 1234567890,
                 Address = "Fake Address",
+                Email = "Email@mail.com",
                 Firstname = "First",
-                Lastname = "Name",
-                Email = "Mail@Mail.mail",
-                clearPassword = "password"
+                Lastname = "last",
+                SecretNumber = 1234567890,
             };
-
             _mock.Setup(repo => repo.CreateUser(It.IsAny<User>())).Returns<User>(user =>
             {
                 user.Id = 1337;
@@ -44,8 +43,7 @@ namespace WorkTest
         [Fact]
         public void CreateUserSuccessTest()
         {
-            User returnUser = _service.CreateUser(_inputUser);
-
+            User returnUser = _service.CreateUser(_createUser, _strongPass);
             Assert.Equal(1337,returnUser.Id);
             _mock.Verify(repo => repo.CreateUser(returnUser), Times.Once);
         }
@@ -53,11 +51,71 @@ namespace WorkTest
         [Fact]
         public void CreateUserNoFirstNameExpectArgumentExceptionTest()
         {
-            _inputUser.Firstname = null;
-            User returnUser = _service.CreateUser(_inputUser);
+            _createUser.Firstname = null;
 
-            Exception e = Assert.Throws<ArgumentException>(() => _service.CreateUser(_inputUser));
+            Exception e = Assert.Throws<ArgumentException>(() =>
+                _service.CreateUser(_createUser, _strongPass));
             Assert.Equal("Firstname null or empty!", e.Message);
+            _mock.Verify(repo => repo.CreateUser(It.IsAny<User>()), Times.Never);
+        }
+
+        [Fact]
+        public void CreateUserNolastNameExpectArgumentExceptionTest()
+        {
+            _createUser.Lastname = null;
+
+            Exception e = Assert.Throws<ArgumentException>(() =>
+                _service.CreateUser(_createUser, _strongPass));
+            Assert.Equal("Lastname null or empty!", e.Message);
+            _mock.Verify(repo => repo.CreateUser(It.IsAny<User>()), Times.Never);
+        }
+
+        [Fact]
+        public void CreateUserNoAddressExpectArgumentExceptionTest()
+        {
+            _createUser.Address = null;
+
+            Exception e = Assert.Throws<ArgumentException>(() =>
+                _service.CreateUser(_createUser, _strongPass));
+            Assert.Equal("Address null or empty!", e.Message);
+            _mock.Verify(repo => repo.CreateUser(It.IsAny<User>()), Times.Never);
+        }
+
+        [Theory]
+        [InlineData(123456789)]
+        [InlineData(12345)]
+        public void CreateUserInvalidSecretNumberExpectArgumentExceptionTest(int secret)
+        {
+            _createUser.SecretNumber = secret;
+            Exception e = Assert.Throws<ArgumentException>(() =>
+                _service.CreateUser(_createUser, _strongPass));
+            Assert.Equal("Invalid secret!", e.Message);
+            _mock.Verify(repo => repo.CreateUser(It.IsAny<User>()), Times.Never);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("Fakeemail@fakemail")]
+        [InlineData("Wrongma@.com")]
+        public void CreateUserInvalidEmailExpectArgumentExceptionTest(string mail)
+        {
+            _createUser.Email = mail;
+
+            Exception e = Assert.Throws<ArgumentException>(() =>
+                _service.CreateUser(_createUser, _strongPass));
+            Assert.Equal("Email not accepted!", e.Message);
+            _mock.Verify(repo => repo.CreateUser(It.IsAny<User>()), Times.Never);
+        }
+
+        [Theory]
+        [InlineData("poor")]
+        [InlineData("secret")]
+        public void CreateUserInvalidPasswordNameExpectArgumentExceptionTest(string password)
+        {
+
+            Exception e = Assert.Throws<ArgumentException>(() =>
+                _service.CreateUser(_createUser, password));
+            Assert.Equal("Password too weak!", e.Message);
             _mock.Verify(repo => repo.CreateUser(It.IsAny<User>()), Times.Never);
         }
 

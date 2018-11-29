@@ -1,6 +1,7 @@
 ﻿using LenesKlinik.Core.ApplicationServices;
 using LenesKlinik.Core.DomainServices;
 using LenesKlinik.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace LenesKlinik.Data.Repositories
 {
@@ -15,7 +16,9 @@ namespace LenesKlinik.Data.Repositories
 
         public User CreateUser(User user)
         {
-            throw new System.NotImplementedException();
+            _ctx.Attach(user).State = EntityState.Added;
+            _ctx.SaveChanges();
+            return user;
         }
     }
 }
