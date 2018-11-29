@@ -53,7 +53,7 @@ namespace LenesKlinik.Data
             hash = GenerateHash("us3r" + salt);
             var user2 = ctx.Users.Add(new User
             {
-                Id = 1,
+                Id = 2,
                 Email = "Admin@lk.dk",
                 PasswordSalt = salt,
                 PasswordHash = hash,
