@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using LenesKlinik.Core.DomainServices;
 using LenesKlinik.Core.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace LenesKlinik.Core.ApplicationServices.Implementation
 {
