@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using LenesKlinik.Core.Entities;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace LenesKlinik.Data
 {
@@ -30,6 +31,37 @@ namespace LenesKlinik.Data
                 Duration = 90,
                 Price = 799.99,
                 ImageUrl = "http://chchacupuncture.co.nz/wp-content/uploads/2016/07/services5.jpg"
+            }).Entity;
+
+
+            var salt = GenerateSalt();
+            var hash = GenerateHash("4dm1n" + salt);
+            var user1 = ctx.Users.Add(new User
+            {
+                Id = 1,
+                Email = "Admin@lk.dk",
+                PasswordSalt = salt,
+                PasswordHash = hash,
+                Address = "Vejlevej 22",
+                Firstname = "Kenneth",
+                Lastname = "Pedersen",
+                SecretNumber = 0910951337,
+                isAdmin = true
+            }).Entity;
+
+            salt = GenerateSalt();
+            hash = GenerateHash("us3r" + salt);
+            var user2 = ctx.Users.Add(new User
+            {
+                Id = 2,
+                Email = "Admin@lk.dk",
+                PasswordSalt = salt,
+                PasswordHash = hash,
+                Address = "Vejlevej 22",
+                Firstname = "Kenneth",
+                Lastname = "Pedersen",
+                SecretNumber = 0910951337,
+                isAdmin = true
             }).Entity;
 
             ctx.SaveChanges();
