@@ -13,5 +13,8 @@
         public string Lastname { get; set; }
         public string Address { get; set; }
         public int SecretNumber { get; set; }
+
+        //Misc
+        public bool isAdmin { get; set; }
     }
 }

@@ -11,7 +11,10 @@ namespace LenesKlinik.Data
         {
 
             modelBuilder.Entity<Work>()
-                .HasKey(w => w.Id);
+                .HasKey(work => work.Id);
+
+            modelBuilder.Entity<User>()
+                .HasKey(user => user.Id);
             //modelBuilder.Entity<User>()
             //   .HasKey(u => u.Id);
 
@@ -23,6 +26,7 @@ namespace LenesKlinik.Data
 
         //public DbSet<User> Users { get; set; }
         public DbSet<Work> Work { get; set; }
+        public DbSet<User> Users { get; set; }
 
 
     }
