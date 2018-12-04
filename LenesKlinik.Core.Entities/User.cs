@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace LenesKlinik.Core.Entities
+﻿namespace LenesKlinik.Core.Entities
 {
     public class User
     {
@@ -18,6 +16,5 @@ namespace LenesKlinik.Core.Entities
 
         //Misc
         public bool isAdmin { get; set; }
-        public List<Booking> Bookings { get; set; }
     }
 }

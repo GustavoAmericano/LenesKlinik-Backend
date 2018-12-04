@@ -61,8 +61,6 @@ namespace LenesKlinik.RestApi
             services.AddScoped<IWorkRepository, WorkRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IBookingService, BookingService>();
-            services.AddScoped<IBookingRepository, BookingRepository>();
 
             // Ensure we do not loop entities within entities.
             // E.g. When getting a specific pet,
