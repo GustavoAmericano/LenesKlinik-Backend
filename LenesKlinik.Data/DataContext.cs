@@ -15,6 +15,13 @@ namespace LenesKlinik.Data
 
             modelBuilder.Entity<User>()
                 .HasKey(user => user.Id);
+
+            modelBuilder.Entity<Booking>()
+                .HasOne<User>()
+                .WithMany(u => u.Bookings)
+                .HasForeignKey(book => book.UserId);
+
+
             //modelBuilder.Entity<User>()
             //   .HasKey(u => u.Id);
 
@@ -27,6 +34,7 @@ namespace LenesKlinik.Data
         //public DbSet<User> Users { get; set; }
         public DbSet<Work> Work { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
 
 
     }
