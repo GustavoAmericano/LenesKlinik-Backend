@@ -1,7 +1,11 @@
-﻿namespace LenesKlinik.Core.DomainServices
+﻿using System;
+using System.Collections.Generic;
+using LenesKlinik.Core.Entities;
+
+namespace LenesKlinik.Core.DomainServices
 {
     public interface IBookingRepository
     {
-        
+        List<Booking> getBookingsByDate(DateTime dateTime);
     }
 }
