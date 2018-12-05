@@ -55,7 +55,6 @@ namespace CoreTest.BookingTests
             Exception e = Assert.Throws<ArgumentException>(() => _service.GetAvailableBookings(date, duration));
 
             Assert.Equal("Date was before today!",e.Message);
-
         }
 
         [Fact]
