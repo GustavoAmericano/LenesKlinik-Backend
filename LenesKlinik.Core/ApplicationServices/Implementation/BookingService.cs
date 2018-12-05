@@ -17,7 +17,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
         public List<AvailableBooking>[] GetAvailableBookings(DateTime date, int duration)
         {
 
-            if (date.Date < DateTime.Now.Date) throw new ArgumentException("Date was before today!");
+            if (date.Date < DateTime.Now.Date) throw new ArgumentException("Date was before today!" + date.Date);
             if (duration%15 != 0) throw new ArgumentException("Duration must be divisible by 15");
 
             var week = GetWeek(date);
