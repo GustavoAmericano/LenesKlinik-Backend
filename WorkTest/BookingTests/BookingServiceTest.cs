@@ -25,8 +25,77 @@ namespace CoreTest.BookingTests
             _mock.Setup(repo => repo.getBookingsByDate(It.IsAny<DateTime>()))
                 .Returns<DateTime>(dt => GetMockBookings()
                 .Where(book => book.StartTime.Date == dt.Date).ToList());
+            _mock.Setup(repo => repo.SaveBooking(It.IsAny<Booking>())).Returns<Booking>(book => {
+                book.Id = 1;
+                return book;
+            });
         }
 
+        [Fact]
+        public void SaveBookingSuccessTest()
+        {
+            var today = DateTime.Today;
+            Booking booking = new Booking
+            {
+                StartTime = new DateTime(today.Year, today.Month, today.Day, 09, 00, 00),
+                EndTime = new DateTime(today.Year, today.Month, today.Day, 10, 45, 00),
+                User = new User{Id = 1},
+                Work = new Work { Id = 1}
+            };
+            booking = _service.SaveBooking(booking);
+            _mock.Verify(repo => repo.SaveBooking(It.IsAny<Booking>()), Times.Once());
+            Assert.Equal(1, booking.Id);
+        }
+
+        [Fact]
+        public void SaveBookingStartTimeNotDivisableBy15ExpectArgumentExceptionTest()
+        {
+            var today = DateTime.Today;
+            Booking booking = new Booking
+            {
+                StartTime = new DateTime(today.Year, today.Month, today.Day, 09, 43, 00),
+                EndTime = new DateTime(today.Year, today.Month, today.Day, 10, 45, 00),
+                User = new User { Id = 1 },
+                Work = new Work { Id = 1 }
+            };
+            Exception e = Assert.Throws<ArgumentException>(() =>_service.SaveBooking(booking));
+            _mock.Verify(repo => repo.SaveBooking(It.IsAny<Booking>()), Times.Never);
+            Assert.Equal("Invalid start time!", e.Message);
+        }
+
+        [Fact]
+        public void SaveBookingEndTimeNotDivisableBy15ExpectArgumentExceptionTest()
+        {
+            var today = DateTime.Today;
+            Booking booking = new Booking
+            {
+                StartTime = new DateTime(today.Year, today.Month, today.Day, 09, 45, 00),
+                EndTime = new DateTime(today.Year, today.Month, today.Day, 10, 43, 00),
+                User = new User { Id = 1 },
+                Work = new Work { Id = 1 }
+            };
+            Exception e = Assert.Throws<ArgumentException>(() => _service.SaveBooking(booking));
+            _mock.Verify(repo => repo.SaveBooking(It.IsAny<Booking>()), Times.Never);
+            Assert.Equal("Invalid end time!", e.Message);
+        }
+
+        [Fact]
+        public void SaveBookingEndTimeBeforeStartTime()
+        {
+            var today = DateTime.Today;
+            Booking booking = new Booking
+            {
+                StartTime = new DateTime(today.Year, today.Month, today.Day, 10, 45, 00),
+                EndTime = new DateTime(today.Year, today.Month, today.Day, 09, 45, 00),
+                User = new User { Id = 1 },
+                Work = new Work { Id = 1 }
+            };
+            Exception e = Assert.Throws<ArgumentException>(() => _service.SaveBooking(booking));
+            _mock.Verify(repo => repo.SaveBooking(It.IsAny<Booking>()), Times.Never);
+            Assert.Equal("Invalid time - End before start!", e.Message);
+        }
+
+#region GetAvailableBookings
         [Fact]
         public void GetAvailableBookingsSuccessTest()
         {
@@ -38,7 +107,7 @@ namespace CoreTest.BookingTests
             int todayAsInt = (int) date.DayOfWeek - 1;
             var availableBookings = allAvailableBookings[todayAsInt].AvailableSessions;
             
-            _mock.Verify(repo => repo.getBookingsByDate(It.IsAny<DateTime>()), Times.Exactly(7));
+            _mock.Verify(repo => repo.getBookingsByDate(It.IsAny<DateTime>()), Times.AtLeastOnce);
             
             Assert.Equal(21, allAvailableBookings[todayAsInt].AvailableSessions.Count);
 
@@ -71,6 +140,8 @@ namespace CoreTest.BookingTests
             Assert.Equal("Duration must be divisible by 15", e.Message);
         }
 
+#endregion
+
         private List<Booking> GetMockBookings()
         {
             DateTime date = DateTime.Now;
@@ -81,18 +152,18 @@ namespace CoreTest.BookingTests
                 new Booking
                 {
                     Id = 1,
-                    UserId = 1,
-                    WorkId = 1,
+                    User = new User{Id = 1},
+                    Work = new Work { Id = 1},
                     StartTime = new DateTime(date.Year, date.Month, date.Day, 9,45,0),
-                    endTime = new DateTime(date.Year, date.Month, date.Day, 9,45,0).AddMinutes(45),
+                    EndTime = new DateTime(date.Year, date.Month, date.Day, 9,45,0).AddMinutes(45),
                 },
                 new Booking
                 {
                     Id = 2,
-                    UserId = 1,
-                    WorkId = 1,
+                    User = new User{Id = 1},
+                    Work = new Work { Id = 1},
                     StartTime = new DateTime(date.Year, date.Month, date.Day, 11,00,0),
-                    endTime = new DateTime(date.Year, date.Month, date.Day, 11,00,0).AddMinutes(30),
+                    EndTime = new DateTime(date.Year, date.Month, date.Day, 11,00,0).AddMinutes(30),
                 },
 
             };

@@ -9,7 +9,6 @@ namespace LenesKlinik.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<Work>()
                 .HasKey(work => work.Id);
 
@@ -18,24 +17,15 @@ namespace LenesKlinik.Data
 
             modelBuilder.Entity<Booking>()
                 .HasOne<User>()
-                .WithMany(u => u.Bookings)
-                .HasForeignKey(book => book.UserId);
+                .WithMany(u => u.Bookings);
 
-
-            //modelBuilder.Entity<User>()
-            //   .HasKey(u => u.Id);
-
-            //modelBuilder.Entity<Pet>()
-            //  .HasOne(p => p.Owner)
-            //  .WithMany(o => o.Pets)
-            //  .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Booking>()
+                .HasOne<Work>()
+                .WithMany(wo => wo.Bookings);
         }
 
-        //public DbSet<User> Users { get; set; }
         public DbSet<Work> Work { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Booking> Bookings { get; set; }
-
-
     }
 }

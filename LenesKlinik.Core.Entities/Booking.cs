@@ -5,9 +5,9 @@ namespace LenesKlinik.Core.Entities
     public class Booking
     {
         public int Id { get; set; }
-        public int WorkId { get; set; }
-        public int UserId { get; set; }
+        public Work Work{ get; set; }
+        public User User { get; set; }
         public DateTime StartTime { get; set; }
-        public DateTime endTime { get; set; }
+        public DateTime EndTime { get; set; }
     }
 }

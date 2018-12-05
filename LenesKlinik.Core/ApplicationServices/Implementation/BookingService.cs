@@ -53,7 +53,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
                                 currentTime = currentTime.AddMinutes(15);
                             }
                         }
-                        currentTime = currentBooking.endTime;
+                        currentTime = currentBooking.EndTime;
                         count++;
                     }
                 }
@@ -69,8 +69,6 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
 
                     currentTime = currentTime.AddMinutes(15);
                 }
-
-                
                 
                 availableBookingsArray.Add(new AvailableSessionsForDate()
                 {
@@ -82,6 +80,14 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             return availableBookingsArray;
         }
 
+        public Booking SaveBooking(Booking booking)
+        {
+            if(booking.StartTime.Minute % 15 != 0) throw new ArgumentException("Invalid start time!");
+            if(booking.EndTime.Minute % 15 != 0) throw new ArgumentException("Invalid end time!");
+            if (booking.EndTime.Subtract(booking.StartTime).TotalMinutes < 0)
+                throw new ArgumentException("Invalid time - End before start!");
+            return _repo.SaveBooking(booking);
+        }
 
 
         private DateTime[] GetWeek(DateTime date)

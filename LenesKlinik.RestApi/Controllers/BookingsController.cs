@@ -21,12 +21,25 @@ namespace LenesKlinik.RestApi.Controllers
         }
 
         // POST api/booking
-        [HttpPost]
-        public ActionResult<List<AvailableSessionsForDate>> Post([FromBody] dateWithDuration dto)
+        [HttpGet]
+        public ActionResult<List<AvailableSessionsForDate>> Get([FromBody] dateWithDuration dto)
         {
             try
             {
                 return _service.GetAvailableBookings(dto.date, dto.duration);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult<Booking> Post([FromBody] Booking booking)
+        {
+            try
+            {
+                return _service.SaveBooking(booking);
             }
             catch (Exception e)
             {

@@ -7,5 +7,6 @@ namespace LenesKlinik.Core.DomainServices
     public interface IBookingRepository
     {
         List<Booking> getBookingsByDate(DateTime dateTime);
+        Booking SaveBooking(Booking booking);
     }
 }
