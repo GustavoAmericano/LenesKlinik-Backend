@@ -6,6 +6,6 @@ namespace LenesKlinik.Core.ApplicationServices
 {
     public interface IBookingService
     {
-        List<AvailableBooking>[] GetAvailableBookings(DateTime date, int duration);
+        List<AvailableSessionsForDate> GetAvailableBookings(DateTime date, int duration);
     }
 }

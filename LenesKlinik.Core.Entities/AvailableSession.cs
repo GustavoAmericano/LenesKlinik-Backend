@@ -2,7 +2,7 @@
 
 namespace LenesKlinik.Core.Entities
 {
-    public class AvailableBooking
+    public class AvailableSession
     {
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }

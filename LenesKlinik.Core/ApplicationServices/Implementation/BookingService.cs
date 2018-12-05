@@ -14,7 +14,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             _repo = repo;
         }
 
-        public List<AvailableBooking>[] GetAvailableBookings(DateTime date, int duration)
+        public List<AvailableSessionsForDate> GetAvailableBookings(DateTime date, int duration)
         {
 
             if (date.Date < DateTime.Now.Date) throw new ArgumentException("Date was before today!");
@@ -23,11 +23,11 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             var week = GetWeek(date);
             var startTime = new DateTime(1, 1, 1, 09, 0, 0); //might make this editable for the user
             var endTime = new DateTime(1, 1, 1, 17, 0, 0);
-            List<AvailableBooking>[] availableBookingsArray = new List<AvailableBooking>[week.Length];
+            List<AvailableSessionsForDate> availableBookingsArray = new List<AvailableSessionsForDate>();
 
             for (var i = 0; i < week.Length; i++)
             {
-                List<AvailableBooking> availableBookings = new List<AvailableBooking>(); //This would contain start and end dates
+                List<AvailableSession> availableBookings = new List<AvailableSession>(); //This would contain start and end dates
                 List<Booking> bookings = _repo.getBookingsByDate(week[i]); // SORT DATE, might pull this out to get all dates in a week
                 
                 var currentTime = new DateTime(week[i].Year , week[i].Month, week[i].Day, startTime.Hour, startTime.Minute, startTime.Second);
@@ -44,7 +44,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
                             while ((int)currentBooking.StartTime.TimeOfDay.Subtract(currentTime.TimeOfDay).TotalMinutes >= duration)
                             {
                                 //This is a valid time
-                                availableBookings.Add(new AvailableBooking
+                                availableBookings.Add(new AvailableSession
                                 {
                                     StartTime = currentTime,
                                     EndTime = currentTime.AddMinutes(duration)
@@ -61,7 +61,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
                 while ((int)currentTime.TimeOfDay.TotalMinutes <= (int)endTime.TimeOfDay.TotalMinutes - duration)
                 {
                     //valid time within work hours
-                    availableBookings.Add(new AvailableBooking
+                    availableBookings.Add(new AvailableSession
                     {
                         StartTime = currentTime,
                         EndTime = currentTime.AddMinutes(duration)
@@ -70,7 +70,13 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
                     currentTime = currentTime.AddMinutes(15);
                 }
 
-                availableBookingsArray[i] = availableBookings;
+                
+                
+                availableBookingsArray.Add(new AvailableSessionsForDate()
+                {
+                    AvailableSessions = availableBookings,
+                    Date = week[i]
+                });
             }
 
             return availableBookingsArray;
@@ -80,10 +86,11 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
 
         private DateTime[] GetWeek(DateTime date)
         {
-            DateTime[] week = new DateTime[7];
+            int numDay = 5;
+            DateTime[] week = new DateTime[numDay];
 
             var monday = date.AddDays(-(int)date.DayOfWeek + (int)DayOfWeek.Monday);
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < numDay; i++)
             {
                 var weekDay = monday.AddDays(i);
                 week[i] = weekDay;

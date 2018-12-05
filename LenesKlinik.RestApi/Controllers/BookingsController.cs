@@ -22,7 +22,7 @@ namespace LenesKlinik.RestApi.Controllers
 
         // POST api/booking
         [HttpPost]
-        public ActionResult<List<AvailableBooking>[]> Post([FromBody] dateWithDuration dto)
+        public ActionResult<List<AvailableSessionsForDate>> Post([FromBody] dateWithDuration dto)
         {
             try
             {

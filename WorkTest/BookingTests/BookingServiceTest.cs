@@ -33,16 +33,18 @@ namespace CoreTest.BookingTests
             var date = DateTime.Now;
             var duration = 45;
 
-            var array = _service.GetAvailableBookings(date, duration);
+            var allAvailableBookings = _service.GetAvailableBookings(date, duration);
 
+            int todayAsInt = (int) date.DayOfWeek - 1;
+            var availableBookings = allAvailableBookings[todayAsInt].AvailableSessions;
+            
             _mock.Verify(repo => repo.getBookingsByDate(It.IsAny<DateTime>()), Times.Exactly(7));
+            
+            Assert.Equal(21, allAvailableBookings[todayAsInt].AvailableSessions.Count);
 
-            Assert.Equal(21, array[(int) date.DayOfWeek - 1].Count);
-
-            Assert.True(array[(int)date.DayOfWeek - 1][0].StartTime.TimeOfDay.Equals(new TimeSpan(09, 00, 00)));
-            Assert.True(array[(int)date.DayOfWeek - 1][1].StartTime.TimeOfDay.Equals(new TimeSpan(11, 30, 00)));
-            Assert.True(array[(int)date.DayOfWeek - 1][array[(int)date.DayOfWeek - 1].Count-1]
-                .StartTime.TimeOfDay.Equals(new TimeSpan(16, 15, 00)));
+            Assert.True(availableBookings[0].StartTime.TimeOfDay.Equals(new TimeSpan(09, 00, 00)));
+            Assert.True(availableBookings[1].StartTime.TimeOfDay.Equals(new TimeSpan(11, 30, 00)));
+            Assert.True(availableBookings[availableBookings.Count -1].StartTime.TimeOfDay.Equals(new TimeSpan(16, 15, 00)));
 
         }
 
