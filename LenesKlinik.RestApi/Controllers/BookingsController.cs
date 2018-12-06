@@ -26,7 +26,7 @@ namespace LenesKlinik.RestApi.Controllers
         {
             try
             {
-                return _service.GetAvailableBookings(dto.date, dto.duration);
+                return _service.GetAvailableBookings(dto.Date, dto.WorkId);
             }
             catch (Exception e)
             {
