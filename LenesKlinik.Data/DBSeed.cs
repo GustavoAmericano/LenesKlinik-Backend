@@ -42,12 +42,10 @@ namespace LenesKlinik.Data
                 Email = "Admin@lk.dk",
                 PasswordSalt = salt,
                 PasswordHash = hash,
-                Address = "Vejlevej 22",
-                Firstname = "Kenneth",
-                Lastname = "Pedersen",
-                SecretNumber = 0910951337,
                 isAdmin = true
             }).Entity;
+
+
 
             salt = GenerateSalt();
             hash = GenerateHash("us3r" + salt);
@@ -57,13 +55,31 @@ namespace LenesKlinik.Data
                 Email = "Admin@lk.dk",
                 PasswordSalt = salt,
                 PasswordHash = hash,
+                isAdmin = true
+            }).Entity;
+
+
+            var customer1 = ctx.Customers.Add(new Customer
+            {
+                Id = 1,
                 Address = "Vejlevej 22",
                 Firstname = "Kenneth",
                 Lastname = "Pedersen",
                 SecretNumber = 0910951337,
-                isAdmin = true
+                Bookings = null,
+                User = user1
             }).Entity;
 
+            var customer2 = ctx.Customers.Add(new Customer
+            {
+                Id = 2,
+                Address = "Vejlevej 22",
+                Firstname = "Kenneth",
+                Lastname = "Pedersen",
+                SecretNumber = 0910951337,
+                Bookings = null,
+                User = user2
+            }).Entity;
             ctx.SaveChanges();
         }
 

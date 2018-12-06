@@ -22,7 +22,7 @@ namespace LenesKlinik.Data.Repositories
             try
             {
                 return _ctx.Bookings.Where(book => book.StartTime.Date == dateTime.Date)
-                    .Include(book => book.User)
+                    .Include(book => book.Customer)
                     .Include(book => book.Work)
                     .ToList();
             }

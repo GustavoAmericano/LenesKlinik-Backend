@@ -43,7 +43,7 @@ namespace CoreTest.BookingTests
             {
                 StartTime = new DateTime(today.Year, today.Month, today.Day, 09, 00, 00),
                 EndTime = new DateTime(today.Year, today.Month, today.Day, 10, 45, 00),
-                User = new User{Id = 1},
+                Customer = new Customer{Id = 1, User = new User{Id = 1}},
                 Work = new Work { Id = 1}
             };
             booking = _service.SaveBooking(booking);
@@ -59,7 +59,7 @@ namespace CoreTest.BookingTests
             {
                 StartTime = new DateTime(today.Year, today.Month, today.Day, 09, 43, 00),
                 EndTime = new DateTime(today.Year, today.Month, today.Day, 10, 45, 00),
-                User = new User { Id = 1 },
+                Customer = new Customer { Id = 1, User = new User { Id = 1 } },
                 Work = new Work { Id = 1 }
             };
             Exception e = Assert.Throws<ArgumentException>(() =>_service.SaveBooking(booking));
@@ -75,7 +75,7 @@ namespace CoreTest.BookingTests
             {
                 StartTime = new DateTime(today.Year, today.Month, today.Day, 09, 45, 00),
                 EndTime = new DateTime(today.Year, today.Month, today.Day, 10, 43, 00),
-                User = new User { Id = 1 },
+                Customer = new Customer { Id = 1, User = new User { Id = 1 } },
                 Work = new Work { Id = 1 }
             };
             Exception e = Assert.Throws<ArgumentException>(() => _service.SaveBooking(booking));
@@ -91,7 +91,7 @@ namespace CoreTest.BookingTests
             {
                 StartTime = new DateTime(today.Year, today.Month, today.Day, 10, 45, 00),
                 EndTime = new DateTime(today.Year, today.Month, today.Day, 09, 45, 00),
-                User = new User { Id = 1 },
+                Customer = new Customer { Id = 1, User = new User { Id = 1 } },
                 Work = new Work { Id = 1 }
             };
             Exception e = Assert.Throws<ArgumentException>(() => _service.SaveBooking(booking));
@@ -170,7 +170,7 @@ namespace CoreTest.BookingTests
                 new Booking
                 {
                     Id = 1,
-                    User = new User{Id = 1},
+                    Customer = new Customer{Id = 1, User = new User{Id = 1}},
                     Work = new Work { Id = 1},
                     StartTime = new DateTime(date.Year, date.Month, date.Day, 9,45,0),
                     EndTime = new DateTime(date.Year, date.Month, date.Day, 9,45,0).AddMinutes(45),
@@ -178,7 +178,7 @@ namespace CoreTest.BookingTests
                 new Booking
                 {
                     Id = 2,
-                    User = new User{Id = 1},
+                    Customer = new Customer{Id = 1, User = new User{Id = 1}},
                     Work = new Work { Id = 1},
                     StartTime = new DateTime(date.Year, date.Month, date.Day, 11,00,0),
                     EndTime = new DateTime(date.Year, date.Month, date.Day, 11,00,0).AddMinutes(30),

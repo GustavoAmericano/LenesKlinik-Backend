@@ -21,6 +21,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             try
             {
                 ValidateUserInformation(user, clearPass);
+                ValidateCustomerInformation(user.Customer);
                 user.PasswordSalt = GenerateSalt();
                 user.PasswordHash = GenerateHash(clearPass + user.PasswordSalt);
                 return _repo.CreateUser(user);
@@ -38,12 +39,16 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
 
         private void ValidateUserInformation(User user,string clearPass)
         {
-            if (string.IsNullOrEmpty(user.Firstname)) throw new ArgumentException("Firstname null or empty!");
-            if (string.IsNullOrEmpty(user.Lastname)) throw new ArgumentException("Lastname null or empty!");
-            if (string.IsNullOrEmpty(user.Address)) throw new ArgumentException("Address null or empty!");
             if (!ValidateEmail(user.Email)) throw new ArgumentException("Email not accepted!");
             if (clearPass.Length < 8) throw new ArgumentException("Password too weak!");
-            if (user.SecretNumber.ToString().Length != 10) throw new ArgumentException("Invalid secret!");
+        }
+
+        private void ValidateCustomerInformation(Customer cust)
+        {
+            if (string.IsNullOrEmpty(cust.Firstname)) throw new ArgumentException("Firstname null or empty!");
+            if (string.IsNullOrEmpty(cust.Lastname)) throw new ArgumentException("Lastname null or empty!");
+            if (string.IsNullOrEmpty(cust.Address)) throw new ArgumentException("Address null or empty!");
+            if (cust.SecretNumber.ToString().Length != 10) throw new ArgumentException("Invalid secret!");
         }
 
         private bool ValidateEmail(string userEmail)
