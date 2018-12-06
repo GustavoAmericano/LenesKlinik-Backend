@@ -24,7 +24,7 @@ namespace CoreTest.BookingTests
             _mockWork = new Mock<IWorkRepository>();
             _service = new BookingService(_mockBook.Object, _mockWork.Object);
             _bookings = new List<Booking>();
-            _mockBook.Setup(repo => repo.getBookingsByDate(It.IsAny<DateTime>()))
+            _mockBook.Setup(repo => repo.GetBookingsByDate(It.IsAny<DateTime>()))
                 .Returns<DateTime>(dt => GetMockBookings()
                 .Where(book => book.StartTime.Date == dt.Date).ToList());
             _mockBook.Setup(repo => repo.SaveBooking(It.IsAny<Booking>())).Returns<Booking>(book => {
@@ -112,7 +112,7 @@ namespace CoreTest.BookingTests
             int todayAsInt = (int) date.DayOfWeek - 1;
             var availableBookings = allAvailableBookings[todayAsInt].AvailableSessions;
             
-            _mockBook.Verify(repo => repo.getBookingsByDate(It.IsAny<DateTime>()), Times.AtLeastOnce);
+            _mockBook.Verify(repo => repo.GetBookingsByDate(It.IsAny<DateTime>()), Times.AtLeastOnce);
             
             Assert.Equal(21, allAvailableBookings[todayAsInt].AvailableSessions.Count);
 
@@ -145,6 +145,19 @@ namespace CoreTest.BookingTests
             Assert.Equal("Duration must be divisible by 15", e.Message);
         }
 
+        #endregion
+
+        #region GET
+
+        [Fact]
+        public void GetAllBookingTest()
+        {
+            List<BookingInfo> bookings = _service.GetBookingsForWeek(DateTime.Now);
+            _mockBook.Verify(repo => repo.GetBookingsByDate(It.IsAny<DateTime>()), Times.AtLeastOnce);
+            Assert.Equal(5, bookings.Count);
+            Assert.Equal(2, bookings[(int) DateTime.Today.DayOfWeek - 1].Bookings.Count); // Ensure that todays date includes the
+            // two mock bookings.
+        }
 #endregion
 
         private List<Booking> GetMockBookings()

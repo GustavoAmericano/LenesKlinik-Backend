@@ -8,5 +8,6 @@ namespace LenesKlinik.Core.ApplicationServices
     {
         List<AvailableSessionsForDate> GetAvailableBookings(DateTime date, int workId);
         Booking SaveBooking(Booking booking);
+        List<BookingInfo> GetBookingsForWeek(DateTime date);
     }
 }

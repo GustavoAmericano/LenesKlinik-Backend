@@ -17,9 +17,16 @@ namespace LenesKlinik.Data.Repositories
             _ctx = ctx;
         }
 
-        public List<Booking> getBookingsByDate(DateTime dateTime)
+        public List<Booking> GetBookingsByDate(DateTime dateTime)
         {
-            return _ctx.Bookings.Where(book => book.StartTime.Date == dateTime.Date).ToList();
+            try
+            {
+                return _ctx.Bookings.Where(book => book.StartTime.Date == dateTime.Date).ToList();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to fetch bookings from DB!");
+            }
         }
 
         public Booking SaveBooking(Booking booking)

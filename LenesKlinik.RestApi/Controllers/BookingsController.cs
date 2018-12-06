@@ -34,6 +34,19 @@ namespace LenesKlinik.RestApi.Controllers
             }
         }
 
+        [HttpGet("{date}")]
+        public ActionResult<List<BookingInfo>> Get(DateTime date)
+        {
+            try
+            {
+                return _service.GetBookingsForWeek(date);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpPost]
         public ActionResult<Booking> Post([FromBody] Booking booking)
         {
