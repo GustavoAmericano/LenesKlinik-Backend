@@ -9,19 +9,25 @@ namespace LenesKlinik.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Work>()
-                .HasKey(work => work.Id);
+            //modelBuilder.Entity<Customer>()
+            //    .HasOne(c => c.Type)
+            //    .WithMany(ct => ct.Customers)
+            //    .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<User>()
                 .HasKey(user => user.Id);
 
-            modelBuilder.Entity<Booking>()
-                .HasOne<User>()
-                .WithMany(u => u.Bookings);
+            modelBuilder.Entity<Work>()
+                .HasKey(work => work.Id);
 
             modelBuilder.Entity<Booking>()
-                .HasOne<Work>()
-                .WithMany(wo => wo.Bookings);
+                .HasOne(book => book.User)
+                .WithMany(user => user.Bookings)
+                .IsRequired();
+
+            modelBuilder.Entity<Booking>()
+                .HasOne(book => book.Work)
+                .WithMany(work => work.Bookings);
         }
 
         public DbSet<Work> Work { get; set; }
