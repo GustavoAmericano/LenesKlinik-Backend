@@ -22,11 +22,11 @@ namespace LenesKlinik.RestApi.Controllers
 
         // POST api/booking
         [HttpGet]
-        public ActionResult<List<AvailableSessionsForDate>> Get([FromBody] dateWithDuration dto)
+        public ActionResult<List<AvailableSessionsForDate>> Get([FromQuery] dateWithDuration dto)
         {
             try
             {
-                return _service.GetAvailableBookings(dto.date, dto.duration);
+                return _service.GetAvailableBookings(dto.Date, dto.WorkId);
             }
             catch (Exception e)
             {

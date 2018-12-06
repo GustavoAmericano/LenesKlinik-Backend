@@ -8,15 +8,21 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
     public class BookingService : IBookingService
     {
         private IBookingRepository _repo;
+        private IWorkRepository _workRepo;
 
-        public BookingService(IBookingRepository repo)
+        public BookingService(IBookingRepository repo, IWorkRepository workRepo)
         {
             _repo = repo;
+            _workRepo = workRepo;
         }
 
-        public List<AvailableSessionsForDate> GetAvailableBookings(DateTime date, int duration)
+        public List<AvailableSessionsForDate> GetAvailableBookings(DateTime date, int workId)
         {
 
+            Work work = _workRepo.GetWorkById(workId);
+
+            var duration = work.Duration;
+            
             if (date.Date < DateTime.Now.Date) throw new ArgumentException("Date was before today!");
             if (duration%15 != 0) throw new ArgumentException("Duration must be divisible by 15");
 
