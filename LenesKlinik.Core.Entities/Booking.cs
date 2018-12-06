@@ -6,7 +6,7 @@ namespace LenesKlinik.Core.Entities
     {
         public int Id { get; set; }
         public Work Work{ get; set; }
-        public User User { get; set; }
+        public Customer Customer { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
     }

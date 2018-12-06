@@ -27,11 +27,16 @@ namespace WorkTest
             _strongPass = "Str0ngP4$$";
             _createUser = new User
             {
-                Address = "Fake Address",
+                Customer = new Customer
+                {
+                    Id = 1,
+                    Address = "Fake Address",
+                    Firstname = "First",
+                    Lastname = "last",
+                    SecretNumber = 1234567890,
+                },
                 Email = "Email@mail.com",
-                Firstname = "First",
-                Lastname = "last",
-                SecretNumber = 1234567890,
+
             };
             _mock.Setup(repo => repo.CreateUser(It.IsAny<User>())).Returns<User>(user =>
             {
@@ -51,7 +56,7 @@ namespace WorkTest
         [Fact]
         public void CreateUserNoFirstNameExpectArgumentExceptionTest()
         {
-            _createUser.Firstname = null;
+            _createUser.Customer.Firstname = null;
 
             Exception e = Assert.Throws<ArgumentException>(() =>
                 _service.CreateUser(_createUser, _strongPass));
@@ -62,7 +67,7 @@ namespace WorkTest
         [Fact]
         public void CreateUserNolastNameExpectArgumentExceptionTest()
         {
-            _createUser.Lastname = null;
+            _createUser.Customer.Lastname = null;
 
             Exception e = Assert.Throws<ArgumentException>(() =>
                 _service.CreateUser(_createUser, _strongPass));
@@ -73,7 +78,7 @@ namespace WorkTest
         [Fact]
         public void CreateUserNoAddressExpectArgumentExceptionTest()
         {
-            _createUser.Address = null;
+            _createUser.Customer.Address = null;
 
             Exception e = Assert.Throws<ArgumentException>(() =>
                 _service.CreateUser(_createUser, _strongPass));
@@ -86,7 +91,7 @@ namespace WorkTest
         [InlineData(12345)]
         public void CreateUserInvalidSecretNumberExpectArgumentExceptionTest(int secret)
         {
-            _createUser.SecretNumber = secret;
+            _createUser.Customer.SecretNumber = secret;
             Exception e = Assert.Throws<ArgumentException>(() =>
                 _service.CreateUser(_createUser, _strongPass));
             Assert.Equal("Invalid secret!", e.Message);
@@ -131,10 +136,14 @@ namespace WorkTest
                 Email = "Admin@lk.dk",
                 PasswordSalt = salt,
                 PasswordHash = hash,
-                Address = "Vejlevej 22",
-                Firstname = "Kenneth",
-                Lastname = "Pedersen",
-                SecretNumber = 0910951337,
+                Customer = new Customer
+                {
+                    Id = 1,
+                    Address = "Vejlevej 22",
+                    Firstname = "Kenneth",
+                    Lastname = "Pedersen",
+                    SecretNumber = 0910951337,
+                },
                 isAdmin = true
             };
 
@@ -146,10 +155,14 @@ namespace WorkTest
                 Email = "Admin@lk.dk",
                 PasswordSalt = salt,
                 PasswordHash = hash,
-                Address = "Vejlevej 22",
-                Firstname = "Kenneth",
-                Lastname = "Pedersen",
-                SecretNumber = 0910951337,
+                Customer = new Customer
+                {
+                    Id = 2,
+                    Address = "Vejlevej 22",
+                    Firstname = "Kenneth",
+                    Lastname = "Pedersen",
+                    SecretNumber = 0910951337,
+                },
                 isAdmin = true
             };
 

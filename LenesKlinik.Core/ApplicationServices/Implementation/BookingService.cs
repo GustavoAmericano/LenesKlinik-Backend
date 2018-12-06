@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using LenesKlinik.Core.DomainServices;
 using LenesKlinik.Core.Entities;
 
@@ -34,7 +35,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             for (var i = 0; i < week.Length; i++)
             {
                 List<AvailableSession> availableBookings = new List<AvailableSession>(); //This would contain start and end dates
-                List<Booking> bookings = _repo.getBookingsByDate(week[i]); // SORT DATE, might pull this out to get all dates in a week
+                List<Booking> bookings = _repo.GetBookingsByDate(week[i]).OrderBy(book => book.StartTime).ToList();
                 
                 var currentTime = new DateTime(week[i].Year , week[i].Month, week[i].Day, startTime.Hour, startTime.Minute, startTime.Second);
 
@@ -93,6 +94,21 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             if (booking.EndTime.Subtract(booking.StartTime).TotalMinutes < 0)
                 throw new ArgumentException("Invalid time - End before start!");
             return _repo.SaveBooking(booking);
+        }
+
+        public List<BookingInfo> GetBookingsForWeek(DateTime date)
+        {
+            DateTime[] week = GetWeek(date);
+            List<BookingInfo> bookings = new List<BookingInfo>();
+            foreach (var day in week)
+            {
+                bookings.Add(new BookingInfo
+                {
+                    Date = day,
+                    Bookings = _repo.GetBookingsByDate(day)
+                });
+            }
+            return bookings;
         }
 
 
