@@ -15,22 +15,26 @@ namespace CoreTest.BookingTests
     {
         private readonly List<Booking> _bookings;
         private readonly IBookingService _service;
-        private readonly Mock<IBookingRepository> _mock;
+        private readonly Mock<IBookingRepository> _mockBook;
+        private readonly Mock<IWorkRepository> _mockWork;
 
         public BookingServiceTest()
         {
-            _mock = new Mock<IBookingRepository>();
-            _service = new BookingService(_mock.Object);
+            _mockBook = new Mock<IBookingRepository>();
+            _mockWork = new Mock<IWorkRepository>();
+            _service = new BookingService(_mockBook.Object, _mockWork.Object);
             _bookings = new List<Booking>();
-            _mock.Setup(repo => repo.getBookingsByDate(It.IsAny<DateTime>()))
+            _mockBook.Setup(repo => repo.getBookingsByDate(It.IsAny<DateTime>()))
                 .Returns<DateTime>(dt => GetMockBookings()
                 .Where(book => book.StartTime.Date == dt.Date).ToList());
-            _mock.Setup(repo => repo.SaveBooking(It.IsAny<Booking>())).Returns<Booking>(book => {
+            _mockBook.Setup(repo => repo.SaveBooking(It.IsAny<Booking>())).Returns<Booking>(book => {
                 book.Id = 1;
                 return book;
             });
+            _mockWork.Setup(repo => repo.GetWorkById(It.IsAny<int>())).Returns<int>(id => GetMockWork()[id-1]);
         }
 
+#region SAVE
         [Fact]
         public void SaveBookingSuccessTest()
         {
@@ -43,7 +47,7 @@ namespace CoreTest.BookingTests
                 Work = new Work { Id = 1}
             };
             booking = _service.SaveBooking(booking);
-            _mock.Verify(repo => repo.SaveBooking(It.IsAny<Booking>()), Times.Once());
+            _mockBook.Verify(repo => repo.SaveBooking(It.IsAny<Booking>()), Times.Once());
             Assert.Equal(1, booking.Id);
         }
 
@@ -59,7 +63,7 @@ namespace CoreTest.BookingTests
                 Work = new Work { Id = 1 }
             };
             Exception e = Assert.Throws<ArgumentException>(() =>_service.SaveBooking(booking));
-            _mock.Verify(repo => repo.SaveBooking(It.IsAny<Booking>()), Times.Never);
+            _mockBook.Verify(repo => repo.SaveBooking(It.IsAny<Booking>()), Times.Never);
             Assert.Equal("Invalid start time!", e.Message);
         }
 
@@ -75,7 +79,7 @@ namespace CoreTest.BookingTests
                 Work = new Work { Id = 1 }
             };
             Exception e = Assert.Throws<ArgumentException>(() => _service.SaveBooking(booking));
-            _mock.Verify(repo => repo.SaveBooking(It.IsAny<Booking>()), Times.Never);
+            _mockBook.Verify(repo => repo.SaveBooking(It.IsAny<Booking>()), Times.Never);
             Assert.Equal("Invalid end time!", e.Message);
         }
 
@@ -91,23 +95,24 @@ namespace CoreTest.BookingTests
                 Work = new Work { Id = 1 }
             };
             Exception e = Assert.Throws<ArgumentException>(() => _service.SaveBooking(booking));
-            _mock.Verify(repo => repo.SaveBooking(It.IsAny<Booking>()), Times.Never);
+            _mockBook.Verify(repo => repo.SaveBooking(It.IsAny<Booking>()), Times.Never);
             Assert.Equal("Invalid time - End before start!", e.Message);
         }
-
+#endregion
+        
 #region GetAvailableBookings
         [Fact]
         public void GetAvailableBookingsSuccessTest()
         {
             var date = DateTime.Now;
-            var duration = 45;
+            var workId = 1;
 
-            var allAvailableBookings = _service.GetAvailableBookings(date, duration);
+            var allAvailableBookings = _service.GetAvailableBookings(date, workId);
 
             int todayAsInt = (int) date.DayOfWeek - 1;
             var availableBookings = allAvailableBookings[todayAsInt].AvailableSessions;
             
-            _mock.Verify(repo => repo.getBookingsByDate(It.IsAny<DateTime>()), Times.AtLeastOnce);
+            _mockBook.Verify(repo => repo.getBookingsByDate(It.IsAny<DateTime>()), Times.AtLeastOnce);
             
             Assert.Equal(21, allAvailableBookings[todayAsInt].AvailableSessions.Count);
 
@@ -121,9 +126,9 @@ namespace CoreTest.BookingTests
         public void GetAvailableBookingsWrongDateExpectArgumentExceptionTest()
         {
             var date = DateTime.Now.AddDays(-1);
-            var duration = 45;
+            var workId = 1;
             
-            Exception e = Assert.Throws<ArgumentException>(() => _service.GetAvailableBookings(date, duration));
+            Exception e = Assert.Throws<ArgumentException>(() => _service.GetAvailableBookings(date, workId));
 
             Assert.Equal("Date was before today!",e.Message);
 
@@ -133,9 +138,9 @@ namespace CoreTest.BookingTests
         public void GetAvailableBookingsWrongDurationExpectArgumentExceptionTest()
         {
             var date = DateTime.Now;
-            var duration = 36;
+            var workId = 3;
 
-            Exception e = Assert.Throws<ArgumentException>(() => _service.GetAvailableBookings(date, duration));
+            Exception e = Assert.Throws<ArgumentException>(() => _service.GetAvailableBookings(date, workId));
 
             Assert.Equal("Duration must be divisible by 15", e.Message);
         }
@@ -166,6 +171,43 @@ namespace CoreTest.BookingTests
                     EndTime = new DateTime(date.Year, date.Month, date.Day, 11,00,0).AddMinutes(30),
                 },
 
+            };
+        }
+
+        private List<Work> GetMockWork()
+        {
+            return new List<Work>()
+            {
+                new Work
+                {
+                    Id = 1,
+                    Title = "Massage - short",
+                    Price = 2500,
+                    Description = "A short massage",
+                    Duration = 45,
+                    Bookings = null,
+                    ImageUrl = "url.png"
+                },
+                new Work
+                {
+                    Id = 2,
+                    Title = "Massage - long",
+                    Price = 2500,
+                    Description = "A long massage",
+                    Duration = 60,
+                    Bookings = null,
+                    ImageUrl = "url.png"
+                },
+                new Work
+                {
+                    Id = 3,
+                    Title = "Massage - Errorous",
+                    Price = 2500,
+                    Description = "A wrong massage",
+                    Duration = 37,
+                    Bookings = null,
+                    ImageUrl = "url.png"
+                },
             };
         }
     }

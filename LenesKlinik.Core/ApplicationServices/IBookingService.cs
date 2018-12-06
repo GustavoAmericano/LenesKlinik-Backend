@@ -6,7 +6,7 @@ namespace LenesKlinik.Core.ApplicationServices
 {
     public interface IBookingService
     {
-        List<AvailableSessionsForDate> GetAvailableBookings(DateTime date, int duration);
+        List<AvailableSessionsForDate> GetAvailableBookings(DateTime date, int workId);
         Booking SaveBooking(Booking booking);
     }
 }
