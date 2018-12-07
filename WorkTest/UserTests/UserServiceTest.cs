@@ -144,7 +144,7 @@ namespace WorkTest
                     Lastname = "Pedersen",
                     SecretNumber = 0910951337,
                 },
-                isAdmin = true
+                IsAdmin = true
             };
 
             salt = GenerateSalt();
@@ -163,7 +163,7 @@ namespace WorkTest
                     Lastname = "Pedersen",
                     SecretNumber = 0910951337,
                 },
-                isAdmin = true
+                IsAdmin = true
             };
 
             return new List<User>() { user1, user2 };
