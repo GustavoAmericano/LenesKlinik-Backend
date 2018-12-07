@@ -9,7 +9,7 @@ namespace LenesKlinik.Core.Entities
         public string Email { get; set; }
         public string PasswordHash { get; set; }
         public string PasswordSalt { get; set; }
-        public bool isAdmin { get; set; }
+        public bool IsAdmin { get; set; }
         public Customer Customer { get; set; }
     }
 }

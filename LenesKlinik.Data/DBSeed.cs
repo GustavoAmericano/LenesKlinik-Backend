@@ -42,7 +42,7 @@ namespace LenesKlinik.Data
                 Email = "Admin@lk.dk",
                 PasswordSalt = salt,
                 PasswordHash = hash,
-                isAdmin = true
+                IsAdmin = true
             }).Entity;
 
 
@@ -55,7 +55,7 @@ namespace LenesKlinik.Data
                 Email = "Admin@lk.dk",
                 PasswordSalt = salt,
                 PasswordHash = hash,
-                isAdmin = true
+                IsAdmin = true
             }).Entity;
 
 

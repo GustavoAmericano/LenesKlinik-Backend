@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -34,10 +35,25 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             {
                 throw new Exception(e.Message);
             }
-            
         }
 
-        private void ValidateUserInformation(User user,string clearPass)
+        public User ValidateUser(string email, string password)
+        {
+            try
+            {
+                var user = _repo.ValidateUser(email);
+
+                if (user.PasswordHash != GenerateHash(password+ user.PasswordSalt) ) throw new ArgumentException("Wrong password");
+                    
+                return user;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        private void ValidateUserInformation(User user, string clearPass)
         {
             if (!ValidateEmail(user.Email)) throw new ArgumentException("Email not accepted!");
             if (clearPass.Length < 8) throw new ArgumentException("Password too weak!");
@@ -53,7 +69,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
 
         private bool ValidateEmail(string userEmail)
         {
-            if (userEmail == null) return false; 
+            if (userEmail == null) return false;
             return CreateValidEmailRegex().IsMatch(userEmail);
         }
 
