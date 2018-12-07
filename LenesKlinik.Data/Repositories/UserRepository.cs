@@ -1,11 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Security.Authentication;
-using LenesKlinik.Core.ApplicationServices;
 using LenesKlinik.Core.DomainServices;
 using LenesKlinik.Core.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace LenesKlinik.Data.Repositories
