@@ -52,10 +52,10 @@ namespace LenesKlinik.Data
             var user2 = ctx.Users.Add(new User
             {
                 Id = 2,
-                Email = "user@lk.dk",
+                Email = "Admin@lk.dk",
                 PasswordSalt = salt,
                 PasswordHash = hash,
-                IsAdmin = false
+                IsAdmin = true
             }).Entity;
 
 

@@ -28,7 +28,7 @@ namespace LenesKlinik.RestApi.Helpers
             };
 
             if (user.IsAdmin)
-                claims.Add(new Claim("IsAdmin", true.ToString()));
+                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
 
             var token = new JwtSecurityToken(
                 new JwtHeader(new SigningCredentials(
