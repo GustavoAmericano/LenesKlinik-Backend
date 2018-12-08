@@ -41,10 +41,8 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
         {
             try
             {
-                var user = _repo.ValidateUser(email);
-
-                if (user.PasswordHash != GenerateHash(password+ user.PasswordSalt) ) throw new ArgumentException("Wrong password");
-                    
+                var user = _repo.GetUserByMail(email);
+                if (user.PasswordHash != GenerateHash(password + user.PasswordSalt) ) throw new ArgumentException("Wrong password");
                 return user;
             }
             catch (Exception e)

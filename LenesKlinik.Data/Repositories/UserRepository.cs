@@ -22,7 +22,7 @@ namespace LenesKlinik.Data.Repositories
             return user;
         }
 
-        public User ValidateUser(string email)
+        public User GetUserByMail(string email)
         {
             var userFromDb = _ctx.Users.Include(user => user.Customer).FirstOrDefault(u => u.Email.Equals(email));
             

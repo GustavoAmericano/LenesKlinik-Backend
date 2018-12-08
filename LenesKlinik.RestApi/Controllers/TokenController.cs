@@ -31,14 +31,21 @@ namespace LenesKlinik.RestApi.Controllers
         [HttpPost]
         public ActionResult<string> Login([FromBody] LoginInput input)
         {
-            var user = _userService.ValidateUser(input.Email, input.Password);
-
-            // Authentication successful
-            return Ok(new
+            try
             {
-                username = user.Email,
-                token = authenticationHelper.GenerateToken(user)
-            });
+                var user = _userService.ValidateUser(input.Email, input.Password);
+
+                // Authentication successful
+                return Ok(new
+                {
+                    username = user.Email,
+                    token = authenticationHelper.GenerateToken(user)
+                });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }
