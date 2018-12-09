@@ -27,15 +27,12 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             if (date.Date < DateTime.Now.Date) throw new ArgumentException("Date was before today!");
             //If not divisible by 15, it's an invalid duration.
             if (duration%15 != 0) throw new ArgumentException("Duration must be divisible by 15");
-
             //Fetch mon - fri for the week that contains the input date.
             var week = GetWeek(date);
-
             // HARDCODED: Daily time that the customer starts her day.
             var startTime = new DateTime(1, 1, 1, 09, 0, 0); //might make this editable for the user
             // HARDCODED: Daily time that the customer ends her day.
             var endTime = new DateTime(1, 1, 1, 17, 0, 0);
-
             //A list that will contain DateSessions, which is an entity containing a date,
             //and a list of available sessions for that date.
             List<DateSessions> DateSessionsList = new List<DateSessions>();

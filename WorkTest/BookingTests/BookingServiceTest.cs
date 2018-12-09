@@ -21,8 +21,10 @@ namespace CoreTest.BookingTests
 
         public BookingServiceTest()
         {
+            // Since it's currently hardcoded that a week is 5 days(Mon - Fri), we need to ensure we don't run tests
+            // For either sunday or saturday. 
             _date = DateTime.Now;
-            if ((int)_date.DayOfWeek > 5) _date = _date.AddDays(2);
+            if ((int)_date.DayOfWeek  == 0 || (int)_date.DayOfWeek == 6) _date = _date.AddDays(2); 
 
             _mockBook = new Mock<IBookingRepository>();
             _mockWork = new Mock<IWorkRepository>();
