@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LenesKlinik.Core.Entities
 {
-    public class DateSessions
+    public class AvailableSessionsForDate
     {
         public DateTime Date { get; set; }
         public List<AvailableSession> AvailableSessions { get; set; }

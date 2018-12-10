@@ -41,8 +41,10 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
         {
             try
             {
-                var user = _repo.GetUserByMail(email);
-                if (user.PasswordHash != GenerateHash(password + user.PasswordSalt) ) throw new ArgumentException("Wrong password");
+                var user = _repo.ValidateUser(email);
+
+                if (user.PasswordHash != GenerateHash(password+ user.PasswordSalt) ) throw new ArgumentException("Wrong password");
+                    
                 return user;
             }
             catch (Exception e)
@@ -53,8 +55,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
 
         private void ValidateUserInformation(User user, string clearPass)
         {
-            if (_repo.CheckEmailInUse(user.Email)) throw new ArgumentException("Email already in use!");
-                if (!ValidateEmail(user.Email)) throw new ArgumentException("Email not accepted!");
+            if (!ValidateEmail(user.Email)) throw new ArgumentException("Email not accepted!");
             if (clearPass.Length < 8) throw new ArgumentException("Password too weak!");
         }
 
@@ -63,7 +64,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             if (string.IsNullOrEmpty(cust.Firstname)) throw new ArgumentException("Firstname null or empty!");
             if (string.IsNullOrEmpty(cust.Lastname)) throw new ArgumentException("Lastname null or empty!");
             if (string.IsNullOrEmpty(cust.Address)) throw new ArgumentException("Address null or empty!");
-            if (cust.PhoneNumber.ToString().Length != 8) throw new ArgumentException("Invalid phone number!");
+            if (cust.SecretNumber.ToString().Length != 10) throw new ArgumentException("Invalid secret!");
         }
 
         private bool ValidateEmail(string userEmail)

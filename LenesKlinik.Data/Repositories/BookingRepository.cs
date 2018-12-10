@@ -24,10 +24,9 @@ namespace LenesKlinik.Data.Repositories
                 return _ctx.Bookings.Where(book => book.StartTime.Date == dateTime.Date)
                     .Include(book => book.Customer)
                     .Include(book => book.Work)
-                    .OrderBy(book => book.StartTime)
                     .ToList();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 throw new Exception("Failed to fetch bookings from DB!");
             }
@@ -40,7 +39,7 @@ namespace LenesKlinik.Data.Repositories
                 _ctx.Attach(booking).State = EntityState.Added;
                 _ctx.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 throw new Exception("Failed to create entity!");
             }

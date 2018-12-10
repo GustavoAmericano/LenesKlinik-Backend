@@ -6,18 +6,7 @@ namespace LenesKlinik.Core.DomainServices
 {
     public interface IBookingRepository
     {
-        /// <summary>
-        /// Saves the booking entity to the DB.
-        /// </summary>
-        /// <param name="booking"></param>
-        /// <returns>Returns the saved entity.</returns>
         Booking SaveBooking(Booking booking);
-
-        /// <summary>
-        /// Gets all bookings which startDate is the same as the input date.
-        /// </summary>
-        /// <param name="date"></param>
-        /// <returns>Returns a list of Booking entities, which startDate is equal to the input date.</returns>
         List<Booking> GetBookingsByDate(DateTime date);
     }
 }

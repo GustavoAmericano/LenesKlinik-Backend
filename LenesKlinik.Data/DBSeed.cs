@@ -65,8 +65,7 @@ namespace LenesKlinik.Data
                 Address = "Vejlevej 22",
                 Firstname = "Kenneth",
                 Lastname = "Pedersen",
-                Birthdate = new DateTime(1995,10,09),
-                PhoneNumber = 51158200,
+                SecretNumber = 0910951337,
                 Bookings = null,
                 User = user1
             }).Entity;
@@ -77,8 +76,7 @@ namespace LenesKlinik.Data
                 Address = "Vejlevej 22",
                 Firstname = "Kenneth",
                 Lastname = "Pedersen",
-                Birthdate = new DateTime(1970,03,01),
-                PhoneNumber = 51928312,
+                SecretNumber = 0910951337,
                 Bookings = null,
                 User = user2
             }).Entity;
