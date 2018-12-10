@@ -50,6 +50,7 @@ namespace LenesKlinik.Data.Repositories
             {
                 Work work = _ctx.Work.FirstOrDefault(wo => wo.Id == workId) ?? throw new InvalidOperationException($"No entity with id {workId}");
                 _ctx.Bookings.RemoveRange(_ctx.Bookings.Where(book => book.Work.Id == work.Id));
+                _ctx.Work.Remove(_ctx.Work.First(w => w.Id == workId));
                 _ctx.SaveChanges();
             }
             catch (Exception)
