@@ -31,13 +31,11 @@ namespace LenesKlinik.Data
 
             modelBuilder.Entity<Booking>()
                 .HasOne(book => book.Customer)
-                .WithMany(cust => cust.Bookings)
-                .OnDelete(DeleteBehavior.SetNull);
+                .WithMany(cust => cust.Bookings);
 
             modelBuilder.Entity<Booking>()
                 .HasOne(book => book.Work)
-                .WithMany(work => work.Bookings)
-                .OnDelete(DeleteBehavior.SetNull);
+                .WithMany(work => work.Bookings);
         }
 
         public DbSet<Work> Work { get; set; }
