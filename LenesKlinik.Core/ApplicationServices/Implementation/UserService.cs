@@ -53,7 +53,8 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
 
         private void ValidateUserInformation(User user, string clearPass)
         {
-            if (!ValidateEmail(user.Email)) throw new ArgumentException("Email not accepted!");
+            if (_repo.CheckEmailInUse(user.Email)) throw new ArgumentException("Email already in use!");
+                if (!ValidateEmail(user.Email)) throw new ArgumentException("Email not accepted!");
             if (clearPass.Length < 8) throw new ArgumentException("Password too weak!");
         }
 

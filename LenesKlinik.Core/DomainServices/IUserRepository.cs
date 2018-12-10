@@ -1,4 +1,5 @@
-﻿using LenesKlinik.Core.Entities;
+﻿using System;
+using LenesKlinik.Core.Entities;
 
 namespace LenesKlinik.Core.DomainServices
 {
@@ -18,5 +19,13 @@ namespace LenesKlinik.Core.DomainServices
         /// <param name="email"></param>
         /// <returns>First matching User entity.</returns>
         User GetUserByMail(string email);
+
+
+        /// <summary>
+        /// Checks if a user with selected email already exists
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>True if user exists, False if not.</returns>
+        bool CheckEmailInUse(string email);
     }
 }

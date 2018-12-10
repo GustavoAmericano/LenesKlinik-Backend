@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using LenesKlinik.Core.ApplicationServices;
@@ -39,6 +40,12 @@ namespace WorkTest
                 Email = "Email@mail.com",
 
             };
+            _mock.Setup(repo => repo.CheckEmailInUse(It.IsAny<string>()))
+                .Returns<string>(email =>
+                {
+                    if (GetMockUsers().FirstOrDefault(user => user.Email.Equals(email)) != null) return true;
+                    return false;
+                });
             _mock.Setup(repo => repo.CreateUser(It.IsAny<User>())).Returns<User>(user =>
             {
                 user.Id = 1337;
@@ -85,6 +92,15 @@ namespace WorkTest
                 _service.CreateUser(_createUser, _strongPass));
             Assert.Equal("Address null or empty!", e.Message);
             _mock.Verify(repo => repo.CreateUser(It.IsAny<User>()), Times.Never);
+        }
+
+        [Fact]
+        public void CreateUserEmailInUserExpectException()
+        {
+            _createUser.Email = "Admin@lk.dk";
+
+            Exception e = Assert.Throws<ArgumentException>(() => _service.CreateUser(_createUser, _strongPass));
+            Assert.Equal("Email already in use!" , e.Message);
         }
 
         // SHOULD WE EVEN CHECK FOR INVALID AGES? 
@@ -167,7 +183,7 @@ namespace WorkTest
             var user2 = new User
             {
                 Id = 2,
-                Email = "Admin@lk.dk",
+                Email = "user@lk.dk",
                 PasswordSalt = salt,
                 PasswordHash = hash,
                 Customer = new Customer

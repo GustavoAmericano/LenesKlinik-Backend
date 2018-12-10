@@ -31,6 +31,10 @@ namespace LenesKlinik.Data.Repositories
             return userFromDb;
         }
 
-       
+        public bool CheckEmailInUse(string email)
+        {
+            if (_ctx.Users.FirstOrDefault(user => user.Email.Equals(email)) != null) return true;
+            return false;
+        }
     }
 }
