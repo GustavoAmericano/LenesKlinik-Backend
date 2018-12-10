@@ -62,7 +62,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             if (string.IsNullOrEmpty(cust.Firstname)) throw new ArgumentException("Firstname null or empty!");
             if (string.IsNullOrEmpty(cust.Lastname)) throw new ArgumentException("Lastname null or empty!");
             if (string.IsNullOrEmpty(cust.Address)) throw new ArgumentException("Address null or empty!");
-            if (cust.SecretNumber.ToString().Length != 10) throw new ArgumentException("Invalid secret!");
+            if (cust.PhoneNumber.ToString().Length != 8) throw new ArgumentException("Invalid phone number!");
         }
 
         private bool ValidateEmail(string userEmail)
