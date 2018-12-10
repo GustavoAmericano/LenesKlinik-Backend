@@ -6,8 +6,27 @@ namespace LenesKlinik.Core.ApplicationServices
 {
     public interface IBookingService
     {
-        List<AvailableSessionsForDate> GetAvailableBookings(DateTime date, int workId);
+        /// <summary>
+        /// Calculates and returns all available sessions for the week
+        /// based on the given date, and the length of the chosen work.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="workId"></param>
+        /// <returns>A list of DateSessions, one for each day mon - fri of the week</returns>
+        List<DateSessions> GetAvailableBookings(DateTime date, int workId);
+
+        /// <summary>
+        /// Validates and saves a booking object to the database.
+        /// </summary>
+        /// <param name="booking"></param>
+        /// <returns>The saved booking</returns>
         Booking SaveBooking(Booking booking);
+
+        /// <summary>
+        /// Gets all bookings for the week, based on the given date.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns>A list of BookingInfo, one for each day mon-fri of the week</returns>
         List<BookingInfo> GetBookingsForWeek(DateTime date);
     }
 }

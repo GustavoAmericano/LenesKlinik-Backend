@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using LenesKlinik.Core.ApplicationServices;
@@ -33,11 +34,18 @@ namespace WorkTest
                     Address = "Fake Address",
                     Firstname = "First",
                     Lastname = "last",
-                    SecretNumber = 1234567890,
+                    Birthdate = DateTime.Now.AddDays(-73).AddYears(22),
+                    PhoneNumber = 51158200
                 },
                 Email = "Email@mail.com",
 
             };
+            _mock.Setup(repo => repo.CheckEmailInUse(It.IsAny<string>()))
+                .Returns<string>(email =>
+                {
+                    if (GetMockUsers().FirstOrDefault(user => user.Email.Equals(email)) != null) return true;
+                    return false;
+                });
             _mock.Setup(repo => repo.CreateUser(It.IsAny<User>())).Returns<User>(user =>
             {
                 user.Id = 1337;
@@ -86,17 +94,39 @@ namespace WorkTest
             _mock.Verify(repo => repo.CreateUser(It.IsAny<User>()), Times.Never);
         }
 
-        [Theory]
-        [InlineData(123456789)]
-        [InlineData(12345)]
-        public void CreateUserInvalidSecretNumberExpectArgumentExceptionTest(int secret)
+        [Fact]
+        public void CreateUserEmailInUserExpectException()
         {
-            _createUser.Customer.SecretNumber = secret;
+            _createUser.Email = "Admin@lk.dk";
+
+            Exception e = Assert.Throws<ArgumentException>(() => _service.CreateUser(_createUser, _strongPass));
+            Assert.Equal("Email already in use!" , e.Message);
+        }
+
+        // SHOULD WE EVEN CHECK FOR INVALID AGES? 
+        //[Fact] 
+        //public void CreateUserInvalidBirthdateExpectArgumentExceptionTest()
+        //{
+        //    _createUser.Customer.Birthdate = DateTime.Now;
+
+        //    Exception e = Assert.Throws<ArgumentException>(() =>
+        //        _service.CreateUser(_createUser, _strongPass));
+        //    Assert.Equal("Birthdate not accepted!", e.Message);
+        //    _mock.Verify(repo => repo.CreateUser(It.IsAny<User>()), Times.Never);
+        //}
+
+        [Theory]
+        [InlineData(12)]
+        [InlineData(1234567)]
+        public void CreateUserInvalidPhoneNumberExpectArgumentExceptionTest(int num)
+        {
+            _createUser.Customer.PhoneNumber = num;
             Exception e = Assert.Throws<ArgumentException>(() =>
                 _service.CreateUser(_createUser, _strongPass));
-            Assert.Equal("Invalid secret!", e.Message);
+            Assert.Equal("Invalid phone number!", e.Message);
             _mock.Verify(repo => repo.CreateUser(It.IsAny<User>()), Times.Never);
         }
+
 
         [Theory]
         [InlineData(null)]
@@ -142,7 +172,8 @@ namespace WorkTest
                     Address = "Vejlevej 22",
                     Firstname = "Kenneth",
                     Lastname = "Pedersen",
-                    SecretNumber = 0910951337,
+                    Birthdate = new DateTime(1995,09,10),
+                    PhoneNumber = 51158200,
                 },
                 IsAdmin = true
             };
@@ -151,8 +182,8 @@ namespace WorkTest
             hash = GenerateHash("us3r" + salt);
             var user2 = new User
             {
-                Id = 1,
-                Email = "Admin@lk.dk",
+                Id = 2,
+                Email = "user@lk.dk",
                 PasswordSalt = salt,
                 PasswordHash = hash,
                 Customer = new Customer
@@ -161,7 +192,8 @@ namespace WorkTest
                     Address = "Vejlevej 22",
                     Firstname = "Kenneth",
                     Lastname = "Pedersen",
-                    SecretNumber = 0910951337,
+                    Birthdate = new DateTime(1970,03,01),
+                    PhoneNumber = 51928329
                 },
                 IsAdmin = true
             };
