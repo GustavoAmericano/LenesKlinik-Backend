@@ -23,6 +23,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             
             Work work = _workRepo.GetWorkById(workId); // Get the work, the workId points to
             var duration = work.Duration;  // Get the duration of the Work
+
             //If before today, we do not wish to look for available sessions.
             if (date.Date < DateTime.Now.Date) throw new ArgumentException("Date was before today!");
             //If not divisible by 15, it's an invalid duration.
@@ -41,67 +42,72 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             for (var i = 0; i < week.Length; i++)
             {
                 // List that will available sessions
-                List<AvailableSession> availableBookings = new List<AvailableSession>(); 
+                List<AvailableSession> availableBookings = new List<AvailableSession>();
 
-                // Fetch currently booked sessions for the day
-                List<Booking> bookings = _repo.GetBookingsByDate(week[i]).OrderBy(book => book.StartTime).ToList();
-                
-                // Set start time to the dates date, and the start time of customers workdate
-                var currentTime = new DateTime(week[i].Year , week[i].Month, week[i].Day, startTime.Hour, startTime.Minute, startTime.Second);
-
-                // If there was previously booked sessions:
-                if (!bookings.Count.Equals(0))
+                //If date is before today, ignore
+                if (week[i].Date >= DateTime.Today)
                 {
-                    var totalBookings = bookings.Count; // How many bookings are there
-                    int count = 0; // Start at 0 (0-indexed)
-                    while (count < totalBookings) // While there's still booked sessions:
+                    // Fetch currently booked sessions for the day
+                    List<Booking> bookings = _repo.GetBookingsByDate(week[i]).OrderBy(book => book.StartTime).ToList();
+
+                    // Set start time to the dates date, and the start time of customers workdate
+                    var currentTime = new DateTime(week[i].Year, week[i].Month, week[i].Day, startTime.Hour, startTime.Minute, startTime.Second);
+
+                    // If there was previously booked sessions:
+                    if (!bookings.Count.Equals(0))
                     {
-                        var currentBooking = bookings[count]; // current booking we work with
-                        if (currentBooking.StartTime.TimeOfDay != currentTime.TimeOfDay) // If currentTime and booked sessions time ain't equal:
+                        var totalBookings = bookings.Count; // How many bookings are there
+                        int count = 0; // Start at 0 (0-indexed)
+                        while (count < totalBookings) // While there's still booked sessions:
                         {
-                            // While the time between our current time and the booked sessions startTime is 
-                            // bigger or equal to the duration of the Work:
-                            while ((int)currentBooking.StartTime.TimeOfDay.Subtract(currentTime.TimeOfDay).TotalMinutes >= duration)
+                            var currentBooking = bookings[count]; // current booking we work with
+                            if (currentBooking.StartTime.TimeOfDay != currentTime.TimeOfDay) // If currentTime and booked sessions time ain't equal:
                             {
-                                //Add the sessions to the list
-                                availableBookings.Add(new AvailableSession
+                                // While the time between our current time and the booked sessions startTime is 
+                                // bigger or equal to the duration of the Work:
+                                while ((int)currentBooking.StartTime.TimeOfDay.Subtract(currentTime.TimeOfDay).TotalMinutes >= duration)
                                 {
-                                    StartTime = currentTime,
-                                    EndTime = currentTime.AddMinutes(duration)
-                                });
+                                    //Add the sessions to the list
+                                    availableBookings.Add(new AvailableSession
+                                    {
+                                        StartTime = currentTime,
+                                        EndTime = currentTime.AddMinutes(duration)
+                                    });
 
-                                // Add 15 minutes to the currentTime and loop.
-                                currentTime = currentTime.AddMinutes(15);
+                                    // Add 15 minutes to the currentTime and loop.
+                                    currentTime = currentTime.AddMinutes(15);
+                                }
                             }
+                            // When there's no longer enough time between booking and current time, go to endTime of the booking and loop.
+                            currentTime = currentBooking.EndTime;
+                            count++;
                         }
-                        // When there's no longer enough time between booking and current time, go to endTime of the booking and loop.
-                        currentTime = currentBooking.EndTime;
-                        count++;
                     }
+
+                    // If no previously booked sessions remains:
+                    // While the time between the currentTime and the end of customers workday:
+                    while ((int)currentTime.TimeOfDay.TotalMinutes <= (int)endTime.TimeOfDay.TotalMinutes - duration)
+                    {
+                        //Add the available session to the list
+                        availableBookings.Add(new AvailableSession
+                        {
+                            StartTime = currentTime,
+                            EndTime = currentTime.AddMinutes(duration)
+                        });
+
+                        // Add 15minutes and loop
+                        currentTime = currentTime.AddMinutes(15);
+                    }
+
                 }
                 
-                // If no previously booked sessions remains:
-                // While the time between the currentTime and the end of customers workday:
-                while ((int)currentTime.TimeOfDay.TotalMinutes <= (int)endTime.TimeOfDay.TotalMinutes - duration)
-                {
-                    //Add the available session to the list
-                    availableBookings.Add(new AvailableSession
+                    // Once we're done finding all sessions for the day, add them to the DateSession entity, and give that the
+                    // The current date aswell. Add to the list of DateSessions.
+                    DateSessionsList.Add(new DateSessions()
                     {
-                        StartTime = currentTime,
-                        EndTime = currentTime.AddMinutes(duration)
+                        AvailableSessions = availableBookings,
+                        Date = week[i]
                     });
-
-                    // Add 15minutes and loop
-                    currentTime = currentTime.AddMinutes(15);
-                }
-
-                // Once we're done finding all sessions for the day, add them to the DateSession entity, and give that the
-                // The current date aswell. Add to the list of DateSessions.
-                DateSessionsList.Add(new DateSessions()
-                {
-                    AvailableSessions = availableBookings,
-                    Date = week[i]
-                });
             }
 
             // Return list of DateSessions
