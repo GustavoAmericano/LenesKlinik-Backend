@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LenesKlinik.Core.ApplicationServices;
 using LenesKlinik.Core.Entities;
+using LenesKlinik.RestApi.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LenesKlinik.RestApi.Controllers
@@ -22,11 +23,36 @@ namespace LenesKlinik.RestApi.Controllers
 
         // POST api/work
         [HttpPost("{clearPass}")]
-        public ActionResult<User> Post([FromBody] User user, string clearPass)
+        public ActionResult<SafeUser> Post([FromBody] User user, string clearPass)
         {
             try
             {
-                return _service.CreateUser(user, clearPass);
+                user = _service.CreateUser(user, clearPass);
+                return new SafeUser
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Customer = user.Customer,
+                };
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("{clearPass}")]
+        public ActionResult<SafeUser> Put([FromBody] User user, string clearPass)
+        {
+            try
+            {
+                user = _service.UpdateUser(user, clearPass);
+                return new SafeUser
+                {
+                    Id = user.Id,
+                    Customer = user.Customer,
+                    Email = user.Email
+                };
             }
             catch (Exception e)
             {

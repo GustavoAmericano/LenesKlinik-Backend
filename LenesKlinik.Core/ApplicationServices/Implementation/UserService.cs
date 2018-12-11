@@ -51,11 +51,46 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             }
         }
 
+        public User UpdateUser(User user, string clearPass)
+        {
+            // PASSWORD RIGHT?
+                // GET USER FROM DB x 
+                // VALIDATE IT EXISTS x
+                // VALIDATE PASSWORD IS CORRECT x
+            // USERINFORMATION RIGHT?
+                // VALIDATE EMAIL FITS REQUIREMENTS
+            // CUSTOMER INFORMATION RIGHT?
+                // VALIDATE WITH VALIDATECUSTOMERINFORMATION()
+            // SET PASSWORDSALT ON NEW USER ENTITY
+            // SET PASSWORRDHASH ON NEW USER ENTITY
+            try
+            {
+                User storedUser = _repo.GetUserById(user.Id);
+                if(storedUser == null) throw new ArgumentException($"No user found with ID: {user.Id}");
+                if(storedUser.PasswordHash != GenerateHash(clearPass + storedUser.PasswordSalt)) throw new ArgumentException("Wrong password");
+                if (!ValidateEmail(user.Email)) throw new ArgumentException("Email not accepted!");
+                ValidateCustomerInformation(user.Customer);
+
+                user.PasswordSalt = storedUser.PasswordSalt;
+                user.PasswordHash = GenerateHash(clearPass + user.PasswordSalt);
+
+                return _repo.UpdateUser(user);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+
+
+
+        }
+
         private void ValidateUserInformation(User user, string clearPass)
         {
-            if (_repo.CheckEmailInUse(user.Email)) throw new ArgumentException("Email already in use!");
-                if (!ValidateEmail(user.Email)) throw new ArgumentException("Email not accepted!");
+            if (!ValidateEmail(user.Email)) throw new ArgumentException("Email not accepted!");
             if (clearPass.Length < 8) throw new ArgumentException("Password too weak!");
+            if (_repo.CheckEmailInUse(user.Email)) throw new ArgumentException("Email already in use!"); // This is last, because it sends a request to DB.
         }
 
         private void ValidateCustomerInformation(Customer cust)
