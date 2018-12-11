@@ -82,8 +82,20 @@ namespace LenesKlinik.Data
                 Bookings = null,
                 User = user2
             }).Entity;
+
+            var booking1 = ctx.Bookings.Add(new Booking
+            {
+                Id = 1,
+                Customer = customer2,
+                StartTime = DateTime.MaxValue,
+                EndTime = DateTime.MinValue,
+                Work = work1
+            }).Entity;
+
             ctx.SaveChanges();
         }
+
+       
 
         private static string GenerateSalt()
         {

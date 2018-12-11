@@ -33,6 +33,22 @@ namespace LenesKlinik.Data.Repositories
             }
         }
 
+        public List<Booking> GetBookingsByCustomerId(int customerId)
+        {
+            try
+            {
+                return _ctx.Bookings.Where(book => book.Customer.Id == customerId)
+                    .Include(book => book.Customer)
+                    .Include(book => book.Work)
+                    .OrderBy(book => book.StartTime)
+                    .ToList();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to fetch bookings from DB!");
+            }
+        }
+
         public Booking SaveBooking(Booking booking)
         {
             try

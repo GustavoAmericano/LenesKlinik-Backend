@@ -34,6 +34,20 @@ namespace LenesKlinik.RestApi.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetByUser/{id}")]
+        public ActionResult<List<Booking>> GetByUser(int id)
+        {
+            try
+            {
+                return _service.GetBookingsByCustomerId(id);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpGet("{date}")]
         public ActionResult<List<BookingInfo>> Get(DateTime date)
         {
