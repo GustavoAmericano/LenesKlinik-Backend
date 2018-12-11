@@ -30,13 +30,24 @@ namespace CoreTest.BookingTests
             _mockWork = new Mock<IWorkRepository>();
             _service = new BookingService(_mockBook.Object, _mockWork.Object);
             _bookings = new List<Booking>();
+
+
+            // Mock GetBookingByDate to return any booking where startTime is the given Date in the request.
             _mockBook.Setup(repo => repo.GetBookingsByDate(It.IsAny<DateTime>()))
                 .Returns<DateTime>(dt => GetMockBookings()
                 .Where(book => book.StartTime.Date == dt.Date).ToList());
+
+            // Mock SaveBooking to modify the id of the given Booking and return that entity back.
             _mockBook.Setup(repo => repo.SaveBooking(It.IsAny<Booking>())).Returns<Booking>(book => {
                 book.Id = 1;
                 return book;
             });
+
+            //Mock GetBookingsByCustomer id to return all bookings with the given customerId.
+            _mockBook.Setup(repo => repo.GetBookingsByCustomerId(It.IsAny<int>()))
+                .Returns<int>(id => GetMockBookings().Where(x => x.Customer.Id == id).ToList());
+
+            //Mock GetWorkById in Work repo to return any work in the GetMockWork with the given id.
             _mockWork.Setup(repo => repo.GetWorkById(It.IsAny<int>())).Returns<int>(id => GetMockWork()[id-1]);
         }
 
@@ -155,8 +166,26 @@ namespace CoreTest.BookingTests
             List<BookingInfo> bookings = _service.GetBookingsForWeek(_date);
             _mockBook.Verify(repo => repo.GetBookingsByDate(It.IsAny<DateTime>()), Times.AtLeastOnce);
             Assert.Equal(5, bookings.Count);
-            Assert.Equal(2, bookings[(int) _date.DayOfWeek - 1].Bookings.Count); // Ensure that todays date includes the
+            Assert.Equal(2, bookings[(int) _date.DayOfWeek - 1].Bookings.Count); // Ensure that today's date includes the
             // two mock bookings.
+        }
+
+        [Fact]
+        public void GetBookingsByCustomerIdSuccessTest()
+        {
+            List<Booking> bookings = _service.GetBookingsByCustomerId(1);
+
+            _mockBook.Verify(repo => repo.GetBookingsByCustomerId(It.IsAny<int>()), Times.Once);
+            Assert.Equal(1, bookings.Count);
+        }
+
+        [Fact]
+        public void GetBookingsByCustomerIdNoBookingsExpectNullTest()
+        {
+            List<Booking> bookings = _service.GetBookingsByCustomerId(3);
+
+            _mockBook.Verify(repo => repo.GetBookingsByCustomerId(It.IsAny<int>()), Times.Once());
+            Assert.Null(bookings);
         }
 #endregion
 
@@ -177,7 +206,7 @@ namespace CoreTest.BookingTests
                 new Booking
                 {
                     Id = 2,
-                    Customer = new Customer{Id = 1, User = new User{Id = 1}},
+                    Customer = new Customer{Id = 2, User = new User{Id = 2}},
                     Work = new Work { Id = 1},
                     StartTime = new DateTime(_date.Year, _date.Month, _date.Day, 11,00,0),
                     EndTime = new DateTime(_date.Year, _date.Month, _date.Day, 11,00,0).AddMinutes(30),

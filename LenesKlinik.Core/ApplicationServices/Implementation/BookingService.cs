@@ -138,6 +138,20 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             return bookings;
         }
 
+        public List<Booking> GetBookingsByCustomerId(int customerId)
+        {
+            try
+            {
+                List<Booking> bookings =  _repo.GetBookingsByCustomerId(customerId);
+                if (bookings.Count <= 0) return null;
+                return bookings;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
 
         private DateTime[] GetWeek(DateTime date)
         {
