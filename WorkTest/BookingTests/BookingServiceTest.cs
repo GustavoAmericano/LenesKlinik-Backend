@@ -13,7 +13,6 @@ namespace CoreTest.BookingTests
 {
     public class BookingServiceTest
     {
-        private readonly List<Booking> _bookings;
         private readonly IBookingService _service;
         private readonly Mock<IBookingRepository> _mockBook;
         private readonly Mock<IWorkRepository> _mockWork;
@@ -29,7 +28,6 @@ namespace CoreTest.BookingTests
             _mockBook = new Mock<IBookingRepository>();
             _mockWork = new Mock<IWorkRepository>();
             _service = new BookingService(_mockBook.Object, _mockWork.Object);
-            _bookings = new List<Booking>();
 
 
             // Mock GetBookingByDate to return any booking where startTime is the given Date in the request.
