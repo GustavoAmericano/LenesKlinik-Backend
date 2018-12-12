@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LenesKlinik.Core.DomainServices;
@@ -25,7 +26,8 @@ namespace LenesKlinik.Data.Repositories
 
         public User GetUserByMail(string email)
         {
-            var userFromDb = _ctx.Users.Include(user => user.Customer).FirstOrDefault(u => u.Email.Equals(email));
+            var userFromDb = _ctx.Users.Include(user => user.Customer)
+                .FirstOrDefault(u => u.Email.ToLower().Equals(email.ToLower()));
             
             if(userFromDb == null) throw new InvalidDataException("User Not Found");
 
@@ -72,6 +74,11 @@ namespace LenesKlinik.Data.Repositories
             {
                 throw new Exception("Failed to update user in DB!");
             }
+        }
+
+        public List<User> GetAllUsers()
+        {
+            return _ctx.Users.Include(user => user.Customer).ToList();
         }
     }
 }

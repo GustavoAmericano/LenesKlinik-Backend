@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using LenesKlinik.Core.ApplicationServices;
 using LenesKlinik.Core.Entities;
@@ -71,6 +72,10 @@ namespace LenesKlinik.RestApi.Controllers
         {
             try
             {
+                //if (booking.Work == null)  IF NULL AND THE TOKENS ISADMIN = TRUE OR SOMETHING LIKE THAT, ALLOW REQUEST, ELSE RETURN UNAUTHORIZED
+                //{
+                    
+                //}
                 return _service.SaveBooking(booking);
             }
             catch (Exception e)

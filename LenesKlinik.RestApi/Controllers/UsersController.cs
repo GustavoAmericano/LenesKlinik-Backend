@@ -44,6 +44,34 @@ namespace LenesKlinik.RestApi.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult<List<SafeUser>> Get()
+        {
+            try
+            {
+                List<User> users = _service.GetAllUsers();
+                List<SafeUser> sUsers = new List<SafeUser>();
+                users.ForEach(user =>
+                {
+                    SafeUser safeUser = new SafeUser
+                    {
+                        Id = user.Id,
+                        Customer = user.Customer,
+                        Email = user.Email
+                    };
+                    safeUser.Customer.User = null;
+                    sUsers.Add(safeUser);
+                });
+
+                return sUsers;
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // POST api/work
         [HttpPost("{clearPass}")]
         public ActionResult Post([FromBody] User user, string clearPass)
