@@ -26,5 +26,11 @@ namespace LenesKlinik.Core.DomainServices
         /// <param name="Id"></param>
         /// <returns>A list of Bookings</returns>
         List<Booking> GetBookingsByCustomerId(int customerId);
+
+        /// <summary>
+        /// Deletes the booking with the given Id.
+        /// </summary>
+        /// <param name="bookingId"></param>
+        void DeleteBooking(int bookingId);
     }
 }

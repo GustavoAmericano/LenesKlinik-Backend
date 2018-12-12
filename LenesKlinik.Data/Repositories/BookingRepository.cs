@@ -49,6 +49,19 @@ namespace LenesKlinik.Data.Repositories
             }
         }
 
+        public void DeleteBooking(int bookingId)
+        {
+            try
+            {
+                _ctx.Bookings.Remove(_ctx.Bookings.First(book => book.Id == bookingId));
+                _ctx.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to delete booking from DB!");
+            }
+        }
+
         public Booking SaveBooking(Booking booking)
         {
             try

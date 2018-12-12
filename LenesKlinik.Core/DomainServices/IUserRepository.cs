@@ -27,5 +27,15 @@ namespace LenesKlinik.Core.DomainServices
         /// <param name="email"></param>
         /// <returns>True if user exists, False if not.</returns>
         bool CheckEmailInUse(string email);
+
+
+        /// <summary>
+        /// Fetches the user with the given Id.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        User GetUserById(int userId);
+
+        User UpdateUser(User user);
     }
 }

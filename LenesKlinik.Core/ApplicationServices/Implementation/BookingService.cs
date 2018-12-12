@@ -152,6 +152,18 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             }
         }
 
+        public void DeleteBooking(int bookingId)
+        {
+            try
+            {
+                _repo.DeleteBooking(bookingId);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
 
         private DateTime[] GetWeek(DateTime date)
         {
