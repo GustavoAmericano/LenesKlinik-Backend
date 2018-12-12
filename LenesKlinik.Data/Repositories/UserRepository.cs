@@ -43,7 +43,9 @@ namespace LenesKlinik.Data.Repositories
             try
             {
                 User u =  _ctx.Users.Include(user => user.Customer).FirstOrDefault(user => user.Id == userId);
+                _ctx.Entry(u.Customer).State = EntityState.Detached;
                 _ctx.Entry(u).State = EntityState.Detached;
+                
                 return u;
             }
             catch (Exception e)
@@ -56,8 +58,13 @@ namespace LenesKlinik.Data.Repositories
         {
             try
             {
+                //if (_ctx.ChangeTracker.Entries<User>().Any(u => u.Entity.Id == user.Id))
+                //    _ctx.Entry(user).State = EntityState.Detached;
+
+                //if (_ctx.ChangeTracker.Entries<Customer>().Any(cust => cust.Entity.Id == user.Customer.Id))
+                //    _ctx.Entry(user.Customer).State = EntityState.Detached;
                 _ctx.Attach(user).State = EntityState.Modified;
-                _ctx.Attach(user.Customer).State = EntityState.Modified;
+                _ctx.Customers.Attach(user.Customer).State = EntityState.Modified;
                 _ctx.SaveChanges();
                 return user;
             }
