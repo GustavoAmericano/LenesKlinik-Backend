@@ -35,7 +35,8 @@ namespace LenesKlinik.Data
 
             modelBuilder.Entity<Booking>()
                 .HasOne(book => book.Work)
-                .WithMany(work => work.Bookings);
+                .WithMany(work => work.Bookings)
+                .IsRequired(false);
         }
 
         public DbSet<Work> Work { get; set; }
