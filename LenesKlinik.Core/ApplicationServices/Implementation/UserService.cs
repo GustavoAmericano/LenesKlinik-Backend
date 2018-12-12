@@ -17,7 +17,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             _repo = repo;
         }
 
-        public void CreateUser(User user, string clearPass)
+        public User CreateUser(User user, string clearPass)
         {
             try
             {
@@ -25,7 +25,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
                 ValidateCustomerInformation(user.Customer);
                 user.PasswordSalt = GenerateSalt();
                 user.PasswordHash = GenerateHash(clearPass + user.PasswordSalt);
-                //return _repo.CreateUser(user);  <-- If we need to return the user again.
+                return _repo.CreateUser(user);
             }
             catch (ArgumentException)
             {
@@ -83,7 +83,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
                 }
                 
 
-                //return _repo.UpdateUser(user); <-- If we need to return the user again.
+                return _repo.UpdateUser(user);
             }
             catch (Exception e)
             {

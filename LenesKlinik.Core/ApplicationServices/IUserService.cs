@@ -10,7 +10,7 @@ namespace LenesKlinik.Core.ApplicationServices
         /// <param name="user"></param>
         /// <param name="clearPass"></param>
         /// <returns>The saved User entity.</returns>
-        void CreateUser(User user,string clearPass);
+        User CreateUser(User user,string clearPass);
 
         /// <summary>
         /// Validates existance of user, and matches the password with the saved hashed format. 
@@ -20,6 +20,6 @@ namespace LenesKlinik.Core.ApplicationServices
         /// <returns>A User entity, if validation succeeds, null if not.</returns>
         User ValidateUser(string email, string password);
 
-        void UpdateUser(User user, string clearPass, string newPass);
+        User UpdateUser(User user, string clearPass, string newPass);
     }
 }
