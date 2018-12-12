@@ -23,17 +23,12 @@ namespace LenesKlinik.RestApi.Controllers
 
         // POST api/work
         [HttpPost("{clearPass}")]
-        public ActionResult<SafeUser> Post([FromBody] User user, string clearPass)
+        public ActionResult Post([FromBody] User user, string clearPass)
         {
             try
             {
-                user = _service.CreateUser(user, clearPass);
-                return new SafeUser
-                {
-                    Id = user.Id,
-                    Email = user.Email,
-                    Customer = user.Customer,
-                };
+                _service.CreateUser(user, clearPass);
+                return Ok();
             }
             catch (Exception e)
             {
@@ -42,17 +37,12 @@ namespace LenesKlinik.RestApi.Controllers
         }
 
         [HttpPut("{clearPass}/{newPass?}")]
-        public ActionResult<SafeUser> Put([FromBody] User user, string clearPass, string newPass)
+        public ActionResult Put([FromBody] User user, string clearPass, string newPass)
         {
             try
             {
-                user = _service.UpdateUser(user, clearPass, newPass);
-                return new SafeUser
-                {
-                    Id = user.Id,
-                    Customer = user.Customer,
-                    Email = user.Email
-                };
+                _service.UpdateUser(user, clearPass, newPass);
+                return Ok();
             }
             catch (Exception e)
             {
