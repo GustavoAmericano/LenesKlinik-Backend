@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using LenesKlinik.Core.ApplicationServices;
 using LenesKlinik.Core.Entities;
 using LenesKlinik.RestApi.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LenesKlinik.RestApi.Controllers
@@ -22,6 +23,7 @@ namespace LenesKlinik.RestApi.Controllers
 
         // POST api/booking
         [HttpGet]
+        [Authorize]
         public ActionResult<List<DateSessions>> Get([FromQuery] dateWithDuration dto)
         {
             try
@@ -36,6 +38,7 @@ namespace LenesKlinik.RestApi.Controllers
 
         [HttpGet]
         [Route("GetByUser/{id}")]
+        [Authorize]
         public ActionResult<List<Booking>> GetByUser(int id)
         {
             try
@@ -49,6 +52,7 @@ namespace LenesKlinik.RestApi.Controllers
         }
 
         [HttpGet("{date}")]
+        [Authorize(Roles = "Admin")]
         public ActionResult<List<BookingInfo>> Get(DateTime date)
         {
             try
@@ -62,6 +66,7 @@ namespace LenesKlinik.RestApi.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult<Booking> Post([FromBody] Booking booking)
         {
             try
@@ -75,6 +80,7 @@ namespace LenesKlinik.RestApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public ActionResult Delete(int id)
         {
             try
