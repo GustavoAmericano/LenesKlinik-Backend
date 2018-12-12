@@ -20,6 +20,6 @@ namespace LenesKlinik.Core.ApplicationServices
         /// <returns>A User entity, if validation succeeds, null if not.</returns>
         User ValidateUser(string email, string password);
 
-        User UpdateUser(User user, string clearPass);
+        User UpdateUser(User user, string clearPass, string newPass);
     }
 }

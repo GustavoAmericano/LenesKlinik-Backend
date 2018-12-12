@@ -51,7 +51,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             }
         }
 
-        public User UpdateUser(User user, string clearPass)
+        public User UpdateUser(User user, string clearPass, string newPass)
         {
             // PASSWORD RIGHT?
                 // GET USER FROM DB x 
@@ -71,8 +71,17 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
                 if (!ValidateEmail(user.Email)) throw new ArgumentException("Email not accepted!");
                 ValidateCustomerInformation(user.Customer);
 
-                user.PasswordSalt = storedUser.PasswordSalt;
-                user.PasswordHash = GenerateHash(clearPass + user.PasswordSalt);
+                if (newPass == null)
+                {
+                    user.PasswordSalt = storedUser.PasswordSalt;
+                    user.PasswordHash = GenerateHash(clearPass + user.PasswordSalt);
+                }
+                else
+                {
+                    user.PasswordSalt = GenerateSalt();
+                    user.PasswordHash = GenerateHash(newPass + user.PasswordSalt);
+                }
+                
 
                 return _repo.UpdateUser(user);
             }
@@ -89,8 +98,15 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
         private void ValidateUserInformation(User user, string clearPass)
         {
             if (!ValidateEmail(user.Email)) throw new ArgumentException("Email not accepted!");
-            if (clearPass.Length < 8) throw new ArgumentException("Password too weak!");
+            if (!ValidatePassword(clearPass)) throw new ArgumentException("Password too weak!");
             if (_repo.CheckEmailInUse(user.Email)) throw new ArgumentException("Email already in use!"); // This is last, because it sends a request to DB.
+        }
+
+        private bool ValidatePassword(string password)
+        {
+            if (password.Length < 8) return false;
+            return true;
+            // Could add more checks here
         }
 
         private void ValidateCustomerInformation(Customer cust)

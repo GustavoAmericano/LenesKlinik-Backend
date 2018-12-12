@@ -41,12 +41,12 @@ namespace LenesKlinik.RestApi.Controllers
             }
         }
 
-        [HttpPut("{clearPass}")]
-        public ActionResult<SafeUser> Put([FromBody] User user, string clearPass)
+        [HttpPut("{clearPass}/{newPass?}")]
+        public ActionResult<SafeUser> Put([FromBody] User user, string clearPass, string newPass)
         {
             try
             {
-                user = _service.UpdateUser(user, clearPass);
+                user = _service.UpdateUser(user, clearPass, newPass);
                 return new SafeUser
                 {
                     Id = user.Id,
@@ -59,6 +59,7 @@ namespace LenesKlinik.RestApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+
 
 
 
