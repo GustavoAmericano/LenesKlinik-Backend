@@ -51,7 +51,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             }
         }
 
-        public void UpdateUser(User user, string clearPass, string newPass)
+        public User UpdateUser(User user, string clearPass, string newPass)
         {
             // PASSWORD RIGHT?
                 // GET USER FROM DB x 
