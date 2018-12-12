@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LenesKlinik.Core.ApplicationServices;
 using LenesKlinik.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LenesKlinik.RestApi.Controllers
@@ -42,6 +43,7 @@ namespace LenesKlinik.RestApi.Controllers
 
         // POST api/work
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult<Work> Post([FromBody] Work work)
         {
             try
@@ -56,6 +58,7 @@ namespace LenesKlinik.RestApi.Controllers
 
         // PUT api/work/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public ActionResult<Work> Put(int id, [FromBody] Work work)
         {
             try
@@ -70,6 +73,7 @@ namespace LenesKlinik.RestApi.Controllers
 
         // DELETE api/work/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
             try
