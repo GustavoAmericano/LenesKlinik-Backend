@@ -89,10 +89,11 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             {
                 throw e;
             }
+        }
 
-
-
-
+        public User GetUserById(int id)
+        {
+            return _repo.GetUserById(id);
         }
 
         private void ValidateUserInformation(User user, string clearPass)
