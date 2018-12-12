@@ -21,5 +21,7 @@ namespace LenesKlinik.Core.ApplicationServices
         User ValidateUser(string email, string password);
 
         User UpdateUser(User user, string clearPass, string newPass);
+
+        User GetUserById(int id);
     }
 }
