@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using LenesKlinik.Core.ApplicationServices;
 using LenesKlinik.Core.Entities;
 using LenesKlinik.RestApi.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LenesKlinik.RestApi.Controllers
@@ -22,6 +23,7 @@ namespace LenesKlinik.RestApi.Controllers
 
 
         [HttpGet("{id}")]
+        [Authorize]
         public ActionResult<SafeUser> Get(int id)
         {
             try
@@ -58,6 +60,7 @@ namespace LenesKlinik.RestApi.Controllers
         }
 
         [HttpPut("{clearPass}/{newPass?}")]
+        [Authorize]
         public ActionResult Put([FromBody] User user, string clearPass, string newPass)
         {
             try
