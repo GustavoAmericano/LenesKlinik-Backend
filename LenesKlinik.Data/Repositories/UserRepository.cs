@@ -42,7 +42,7 @@ namespace LenesKlinik.Data.Repositories
         {
             try
             {
-                User u =  _ctx.Users.FirstOrDefault(user => user.Id == userId);
+                User u =  _ctx.Users.Include(user => user.Customer).FirstOrDefault(user => user.Id == userId);
                 _ctx.Entry(u).State = EntityState.Detached;
                 return u;
             }
