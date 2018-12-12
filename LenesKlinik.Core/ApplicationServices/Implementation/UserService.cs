@@ -53,16 +53,6 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
 
         public User UpdateUser(User user, string clearPass, string newPass)
         {
-            // PASSWORD RIGHT?
-                // GET USER FROM DB x 
-                // VALIDATE IT EXISTS x
-                // VALIDATE PASSWORD IS CORRECT x
-            // USERINFORMATION RIGHT?
-                // VALIDATE EMAIL FITS REQUIREMENTS
-            // CUSTOMER INFORMATION RIGHT?
-                // VALIDATE WITH VALIDATECUSTOMERINFORMATION()
-            // SET PASSWORDSALT ON NEW USER ENTITY
-            // SET PASSWORRDHASH ON NEW USER ENTITY
             try
             {
                 User storedUser = _repo.GetUserById(user.Id);
