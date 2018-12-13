@@ -1,4 +1,5 @@
-﻿using LenesKlinik.Core.Entities;
+﻿using System.Collections.Generic;
+using LenesKlinik.Core.Entities;
 
 namespace LenesKlinik.Core.ApplicationServices
 {
@@ -23,5 +24,7 @@ namespace LenesKlinik.Core.ApplicationServices
         User UpdateUser(User user, string clearPass, string newPass);
 
         User GetUserById(int id);
+
+        List<User> GetAllUsers();
     }
 }

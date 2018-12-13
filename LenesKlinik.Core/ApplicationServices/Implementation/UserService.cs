@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -53,16 +54,6 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
 
         public User UpdateUser(User user, string clearPass, string newPass)
         {
-            // PASSWORD RIGHT?
-                // GET USER FROM DB x 
-                // VALIDATE IT EXISTS x
-                // VALIDATE PASSWORD IS CORRECT x
-            // USERINFORMATION RIGHT?
-                // VALIDATE EMAIL FITS REQUIREMENTS
-            // CUSTOMER INFORMATION RIGHT?
-                // VALIDATE WITH VALIDATECUSTOMERINFORMATION()
-            // SET PASSWORDSALT ON NEW USER ENTITY
-            // SET PASSWORRDHASH ON NEW USER ENTITY
             try
             {
                 User storedUser = _repo.GetUserById(user.Id);
@@ -94,6 +85,11 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
         public User GetUserById(int id)
         {
             return _repo.GetUserById(id);
+        }
+
+        public List<User> GetAllUsers()
+        {
+            return _repo.GetAllUsers();
         }
 
         private void ValidateUserInformation(User user, string clearPass)
