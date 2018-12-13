@@ -35,10 +35,16 @@ namespace LenesKlinik.Data.Repositories
                     .ToList();
         }
 
-        public void DeleteBooking(int bookingId)
+        public Booking DeleteBooking(int bookingId)
         {
-                _ctx.Bookings.Remove(_ctx.Bookings.First(book => book.Id == bookingId));
-                _ctx.SaveChanges();
+            Booking booking = _ctx.Bookings
+                .Include(book => book.Customer)
+                .ThenInclude(cust => cust.User)
+                .FirstOrDefault(book => book.Id == bookingId);
+            if (booking == null) return null;
+            _ctx.Bookings.Remove(booking);
+            _ctx.SaveChanges();
+            return booking;
         }
 
         public Booking SaveBooking(Booking booking)
