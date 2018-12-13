@@ -31,6 +31,6 @@ namespace LenesKlinik.Core.DomainServices
         /// Deletes the booking with the given Id.
         /// </summary>
         /// <param name="bookingId"></param>
-        void DeleteBooking(int bookingId);
+        Booking DeleteBooking(int bookingId);
     }
 }

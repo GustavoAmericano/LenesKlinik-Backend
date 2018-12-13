@@ -46,6 +46,10 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
                 if (user.PasswordHash != GenerateHash(password + user.PasswordSalt) ) throw new ArgumentException("Wrong password");
                 return user;
             }
+            catch (ArgumentException)
+            {
+                throw;
+            }
             catch (Exception)
             {
                 throw new Exception("An Error occured trying to save the user.");
@@ -60,6 +64,8 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
                 if(storedUser == null) throw new ArgumentException($"No user found with ID: {user.Id}");
                 if(storedUser.PasswordHash != GenerateHash(clearPass + storedUser.PasswordSalt)) throw new ArgumentException("Wrong password");
                 if (!ValidateEmail(user.Email)) throw new ArgumentException("Email not accepted!");
+                if(newPass != null)
+                    if (!ValidatePassword(newPass)) throw new ArgumentException("Password too weak!");
                 ValidateCustomerInformation(user.Customer);
 
                 if (newPass == null)

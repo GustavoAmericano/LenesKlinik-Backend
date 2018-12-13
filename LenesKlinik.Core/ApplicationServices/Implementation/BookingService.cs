@@ -8,19 +8,19 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
 {
     public class BookingService : IBookingService
     {
-        private IBookingRepository _repo;
-        private IWorkRepository _workRepo;
+        private readonly IBookingRepository _repo;
+        private readonly IWorkRepository _workRepo;
+        private readonly IEmailService _emailService;
 
-        public BookingService(IBookingRepository repo, IWorkRepository workRepo)
+        public BookingService(IBookingRepository repo, IWorkRepository workRepo, IEmailService emailService)
         {
+            _emailService = emailService;
             _repo = repo;
             _workRepo = workRepo;
         }
 
         public List<DateSessions> GetAvailableBookings(DateTime date, int workId)
         {
-
-            
             Work work = _workRepo.GetWorkById(workId); // Get the work, the workId points to
             var duration = work.Duration;  // Get the duration of the Work
 
@@ -173,12 +173,40 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
         {
             try
             {
-                _repo.DeleteBooking(bookingId);
+               Booking booking =  _repo.DeleteBooking(bookingId);
+                if (booking == null) throw new ArgumentException("No booking found with specified ID!");
+                SendCancelMail(booking);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new Exception("An Error occured trying to delete the booking.");
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="booking"></param>
+        private void SendCancelMail(Booking booking)
+        {
+            try
+            {
+                _emailService.SendMail("makeklinik@gmail.com", "Booking aflyst!", $"Booking d. {booking.EndTime} - {booking.EndTime.TimeOfDay} er blevet aflyst.");
+                _emailService.SendMail(booking.Customer.User.Email, "Booking aflyst!", GenerateEmailBody(booking));
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Failed to send mail!");
+            }
+        }
+
+        private string GenerateEmailBody(Booking booking)
+        {
+            return $"Hej, {booking.Customer.Firstname}." +
+                   $"\nDin tid hos Lenes Klinik d. {booking.EndTime} - {booking.StartTime.TimeOfDay} er blevet aflyst." +
+                   "\nVi beklager ulejligheden." +
+                   "\n\nMVH," +
+                   "\nLenes Klinik.";
         }
 
 
@@ -198,7 +226,6 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
                 var weekDay = monday.AddDays(i);
                 week[i] = weekDay;
             }
-
             return week;
         }
 
