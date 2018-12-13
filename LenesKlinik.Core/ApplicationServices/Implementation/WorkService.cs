@@ -16,7 +16,6 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
 
         public Work CreateWork(Work work)
         {
-
             try
             {
                 ValidateWork(work);
@@ -28,7 +27,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             }
             catch (Exception)
             {
-                throw new  Exception("Error storing entity in database!");
+                throw new Exception("An Error occured trying to save the service.");
             }
         }
 
@@ -40,7 +39,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             }
             catch (Exception)
             {
-                throw new Exception("Error loading entities from database!");
+                throw new Exception("An Error occured trying to fetch the services.");
             }
         }
 
@@ -54,7 +53,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             }
             catch (Exception)
             {
-               throw new Exception("Error fetching entity from database!");
+                throw new Exception("An Error occured trying to fetch the service.");
             }
             if (work == null) throw new ArgumentException($"No entity found with id {workId}!");
             return work;
@@ -72,7 +71,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             }
             catch (Exception)
             {
-                throw new Exception("Error deleting entity from database!");
+                throw new Exception("An Error occured trying to delete the service.");
             }
         }
 
@@ -90,7 +89,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             }
             catch (Exception)
             {
-                throw new Exception("Error updating entity in database!");
+                throw new Exception("An Error occured trying to save the service.");
             }
         }
 

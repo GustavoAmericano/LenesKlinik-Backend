@@ -16,6 +16,8 @@ namespace CoreTest.BookingTests
         private readonly IBookingService _service;
         private readonly Mock<IBookingRepository> _mockBook;
         private readonly Mock<IWorkRepository> _mockWork;
+        private Mock<IEmailService> _mockMail;
+
         private DateTime _date;
 
         public BookingServiceTest()
@@ -27,7 +29,8 @@ namespace CoreTest.BookingTests
 
             _mockBook = new Mock<IBookingRepository>();
             _mockWork = new Mock<IWorkRepository>();
-            _service = new BookingService(_mockBook.Object, _mockWork.Object);
+            _mockMail = new Mock<IEmailService>();
+            _service = new BookingService(_mockBook.Object, _mockWork.Object, _mockMail.Object);
 
 
             // Mock GetBookingByDate to return any booking where startTime is the given Date in the request.

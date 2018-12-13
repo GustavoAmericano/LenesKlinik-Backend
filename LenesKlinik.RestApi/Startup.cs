@@ -91,6 +91,8 @@ namespace LenesKlinik.RestApi
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<IBookingRepository, BookingRepository>();
 
+            services.AddScoped<IEmailService, EmailService>();
+
             
             
             // Register the AuthenticationHelper in the helpers folder for dependency

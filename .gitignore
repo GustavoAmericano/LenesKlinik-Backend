@@ -261,4 +261,4 @@ __pycache__/
 *.pyc
 
 # DB FOR EFFIN SAKE
-LensKlinikApp.db
+*.db

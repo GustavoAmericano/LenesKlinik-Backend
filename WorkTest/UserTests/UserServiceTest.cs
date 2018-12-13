@@ -38,7 +38,6 @@ namespace WorkTest
                     PhoneNumber = 51158200
                 },
                 Email = "Email@mail.com",
-
             };
             _mock.Setup(repo => repo.CheckEmailInUse(It.IsAny<string>()))
                 .Returns<string>(email =>
@@ -51,8 +50,10 @@ namespace WorkTest
                 user.Id = 1337;
                 return user;
             });
+            _mock.Setup(repo => repo.UpdateUser(It.IsAny<User>())).Returns<User>(u => u);
+            _mock.Setup(repo => repo.GetUserById(It.IsAny<int>())).Returns<int>(id => GetMockUsers().ToList()[id-1]);
         }
-
+        
         [Fact]
         public void CreateUserSuccessTest()
         {
@@ -73,7 +74,7 @@ namespace WorkTest
         }
 
         [Fact]
-        public void CreateUserNolastNameExpectArgumentExceptionTest()
+        public void CreateUserNoLastNameExpectArgumentExceptionTest()
         {
             _createUser.Customer.Lastname = null;
 
@@ -102,18 +103,6 @@ namespace WorkTest
             Exception e = Assert.Throws<ArgumentException>(() => _service.CreateUser(_createUser, _strongPass));
             Assert.Equal("Email already in use!" , e.Message);
         }
-
-        // SHOULD WE EVEN CHECK FOR INVALID AGES? 
-        //[Fact] 
-        //public void CreateUserInvalidBirthdateExpectArgumentExceptionTest()
-        //{
-        //    _createUser.Customer.Birthdate = DateTime.Now;
-
-        //    Exception e = Assert.Throws<ArgumentException>(() =>
-        //        _service.CreateUser(_createUser, _strongPass));
-        //    Assert.Equal("Birthdate not accepted!", e.Message);
-        //    _mock.Verify(repo => repo.CreateUser(It.IsAny<User>()), Times.Never);
-        //}
 
         [Theory]
         [InlineData(12)]
@@ -154,6 +143,103 @@ namespace WorkTest
             _mock.Verify(repo => repo.CreateUser(It.IsAny<User>()), Times.Never);
         }
 
+
+        #region UPDATE
+        [Fact]
+        public void UpdateUserNoNewPassSuccessTest()
+        {
+            User u = GetMockUsers().ToList()[0];
+            User returnUser = _service.UpdateUser(u, "4dm1n", null);
+            Assert.Equal(1, returnUser.Id);
+            _mock.Verify(repo => repo.UpdateUser(u), Times.Once);
+        }
+
+        [Fact]
+        public void UpdateUserNewPassSuccessTest()
+        {
+            User u = GetMockUsers().ToList()[0];
+            var hash = u.PasswordHash;
+            User returnUser = _service.UpdateUser(u, "4dm1n", "NewStrongPass");
+            Assert.Equal(1, returnUser.Id);
+            Assert.NotEqual(hash, returnUser.PasswordHash);
+            _mock.Verify(repo => repo.UpdateUser(u), Times.Once);
+        }
+
+        [Fact]
+        public void UpdateUserBadNewPassExpectArgumentExceptionTest()
+        {
+            User u = GetMockUsers().ToList()[0];
+            Exception e = Assert.Throws<ArgumentException>(() => _service.UpdateUser(u, "4dm1n", "weakpw"));
+            _mock.Verify(repo => repo.UpdateUser(u), Times.Never);
+            Assert.Equal("Password too weak!", e.Message);
+        }
+
+        [Fact]
+        public void UpdateUserNoFirstNameExpectArgumentExceptionTest()
+        {
+            User u = GetMockUsers().ToList()[0];
+            u.Customer.Firstname = null;
+            Exception e = Assert.Throws<ArgumentException>(() => _service.UpdateUser(u, "4dm1n", null));
+            _mock.Verify(repo => repo.UpdateUser(u), Times.Never);
+            Assert.Equal("Firstname null or empty!", e.Message);
+        }
+
+        [Fact]
+        public void UpdateUserNoLastNameExpectArgumentExceptionTest()
+        {
+            User u = GetMockUsers().ToList()[0];
+            u.Customer.Lastname = null;
+            Exception e = Assert.Throws<ArgumentException>(() => _service.UpdateUser(u, "4dm1n", null));
+            _mock.Verify(repo => repo.UpdateUser(u), Times.Never);
+            Assert.Equal("Lastname null or empty!", e.Message);
+        }
+
+        [Fact]
+        public void UpdateUserNoAddressExpectArgumentExceptionTest()
+        {
+            User u = GetMockUsers().ToList()[0];
+            u.Customer.Address = null;
+            Exception e = Assert.Throws<ArgumentException>(() => _service.UpdateUser(u, "4dm1n", null));
+            _mock.Verify(repo => repo.UpdateUser(u), Times.Never);
+            Assert.Equal("Address null or empty!", e.Message);
+        }
+
+        [Theory]
+        [InlineData(12)]
+        [InlineData(1234567)]
+        public void UpdateUserInvalidPhoneNumberExpectArgumentExceptionTest(int num)
+        {
+            User u = GetMockUsers().ToList()[0];
+            u.Customer.PhoneNumber = num;
+            Exception e = Assert.Throws<ArgumentException>(() => _service.UpdateUser(u, "4dm1n", null));
+            _mock.Verify(repo => repo.UpdateUser(u), Times.Never);
+            Assert.Equal("Invalid phone number!", e.Message);
+        }
+
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("Fakeemail@fakemail")]
+        [InlineData("Wrongma@.com")]
+        public void UpdateUserInvalidEmailExpectArgumentExceptionTest(string mail)
+        {
+            User u = GetMockUsers().ToList()[0];
+            u.Email = null;
+            Exception e = Assert.Throws<ArgumentException>(() => _service.UpdateUser(u, "4dm1n", null));
+            _mock.Verify(repo => repo.UpdateUser(u), Times.Never);
+            Assert.Equal("Email not accepted!", e.Message);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public void GetUserByIdSuccessTest(int id)
+        {
+            User user = _service.GetUserById(id);
+            Assert.Equal(id, user.Id);
+        }
+
+        #endregion
         #region Other
         // Creates two users with random generated salt.
         private IEnumerable<User> GetMockUsers()

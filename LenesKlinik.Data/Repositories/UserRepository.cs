@@ -10,7 +10,7 @@ namespace LenesKlinik.Data.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private DataContext _ctx;
+        private readonly DataContext _ctx;
 
         public UserRepository(DataContext ctx)
         {
@@ -42,37 +42,22 @@ namespace LenesKlinik.Data.Repositories
 
         public User GetUserById(int userId)
         {
-            try
-            {
-                User u =  _ctx.Users.Include(user => user.Customer).FirstOrDefault(user => user.Id == userId);
-                _ctx.Entry(u.Customer).State = EntityState.Detached;
-                _ctx.Entry(u).State = EntityState.Detached;
-                
-                return u;
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to fetch user from DB!");
-            }
+                return _ctx.Users.Include(user => user.Customer).FirstOrDefault(user => user.Id == userId);
         }
 
         public User UpdateUser(User user)
         {
-            try
             {
-                //if (_ctx.ChangeTracker.Entries<User>().Any(u => u.Entity.Id == user.Id))
-                //    _ctx.Entry(user).State = EntityState.Detached;
+                if (_ctx.ChangeTracker.Entries<User>().Any(u => u.Entity.Id == user.Id))
+                    _ctx.ChangeTracker.Entries<User>().First(u => u.Entity.Id == user.Id).State = EntityState.Detached;
 
-                //if (_ctx.ChangeTracker.Entries<Customer>().Any(cust => cust.Entity.Id == user.Customer.Id))
-                //    _ctx.Entry(user.Customer).State = EntityState.Detached;
-                _ctx.Attach(user).State = EntityState.Modified;
-                _ctx.Customers.Attach(user.Customer).State = EntityState.Modified;
+                if (_ctx.ChangeTracker.Entries<Customer>().Any(cust => cust.Entity.Id == user.Customer.Id))
+                    _ctx.ChangeTracker.Entries<Customer>().First(u => u.Entity.Id == user.Customer.Id).State = EntityState.Detached;
+
+                _ctx.Entry(user).State = EntityState.Modified;
+                _ctx.Entry(user.Customer).State = EntityState.Modified;
                 _ctx.SaveChanges();
                 return user;
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to update user in DB!");
             }
         }
 
