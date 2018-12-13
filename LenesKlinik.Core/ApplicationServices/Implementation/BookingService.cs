@@ -203,7 +203,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
         private string GenerateEmailBody(Booking booking)
         {
             return $"Hej, {booking.Customer.Firstname}." +
-                   $"\nDin tid hos Lenes Klinik d. {booking.EndTime} - {booking.StartTime.TimeOfDay} er blevet aflyst." +
+                   $"\nDin tid hos Lenes Klinik d. {booking.StartTime} - {booking.StartTime.TimeOfDay} er blevet aflyst." +
                    "\nVi beklager ulejligheden." +
                    "\n\nMVH," +
                    "\nLenes Klinik.";
