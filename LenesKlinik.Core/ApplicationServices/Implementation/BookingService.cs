@@ -116,24 +116,41 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
 
         public Booking SaveBooking(Booking booking)
         {
-            if(booking.StartTime.Minute % 15 != 0) throw new ArgumentException("Invalid start time!");
-            if(booking.EndTime.Minute % 15 != 0) throw new ArgumentException("Invalid end time!");
+            if(booking.StartTime.Minute % 15 != 0)
+                throw new ArgumentException("Invalid start time!");
+            if(booking.EndTime.Minute % 15 != 0)
+                throw new ArgumentException("Invalid end time!");
             if (booking.EndTime.Subtract(booking.StartTime).TotalMinutes < 0)
                 throw new ArgumentException("Invalid time - End before start!");
-            return _repo.SaveBooking(booking);
+
+            try
+            {
+                return _repo.SaveBooking(booking);
+            }
+            catch (Exception)
+            {
+                throw new Exception("An Error occured trying to save the booking.");
+            }
         }
 
         public List<BookingInfo> GetBookingsForWeek(DateTime date)
         {
             DateTime[] week = GetWeek(date);
             List<BookingInfo> bookings = new List<BookingInfo>();
-            foreach (var day in week)
+            try
             {
-                bookings.Add(new BookingInfo
+                foreach (var day in week)
                 {
-                    Date = day,
-                    Bookings = _repo.GetBookingsByDate(day)
-                });
+                    bookings.Add(new BookingInfo
+                    {
+                        Date = day,
+                        Bookings = _repo.GetBookingsByDate(day)
+                    });
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception("An Error occured trying to fetch the bookings.");
             }
             return bookings;
         }
@@ -148,7 +165,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             }
             catch (Exception e)
             {
-                throw e;
+                throw new Exception("An Error occured fetch to save the bookings.");
             }
         }
 
@@ -160,11 +177,16 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             }
             catch (Exception e)
             {
-                throw e;
+                throw new Exception("An Error occured trying to delete the booking.");
             }
         }
 
 
+        /// <summary>
+        /// Returns an array of the dates of the workweek (mon-fri).
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         private DateTime[] GetWeek(DateTime date)
         {
             int numDay = 5;

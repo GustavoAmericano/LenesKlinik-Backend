@@ -21,10 +21,26 @@ namespace LenesKlinik.Core.ApplicationServices
         /// <returns>A User entity, if validation succeeds, null if not.</returns>
         User ValidateUser(string email, string password);
 
+        /// <summary>
+        /// Validates the given user and customer entities data and saves it.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="clearPass"></param>
+        /// <param name="newPass"></param>
+        /// <returns></returns>
         User UpdateUser(User user, string clearPass, string newPass);
 
+        /// <summary>
+        /// Retrieves the user with the given Id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         User GetUserById(int id);
 
+        /// <summary>
+        /// Fetches all users in the Database.
+        /// </summary>
+        /// <returns></returns>
         List<User> GetAllUsers();
     }
 }
