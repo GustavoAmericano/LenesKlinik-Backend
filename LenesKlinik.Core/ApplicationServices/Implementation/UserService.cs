@@ -32,9 +32,9 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             {
                 throw;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw new Exception(e.Message);
+                throw new Exception("An Error occured trying to save the user.");
             }
         }
 
@@ -46,9 +46,9 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
                 if (user.PasswordHash != GenerateHash(password + user.PasswordSalt) ) throw new ArgumentException("Wrong password");
                 return user;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw new Exception(e.Message);
+                throw new Exception("An Error occured trying to save the user.");
             }
         }
 
@@ -76,22 +76,46 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
 
                 return _repo.UpdateUser(user);
             }
-            catch (Exception e)
+            catch (ArgumentException)
             {
-                throw e;
+                throw;
+            }
+            catch (Exception)
+            {
+                throw new Exception("An Error occured trying to save the user.");
             }
         }
 
         public User GetUserById(int id)
         {
-            return _repo.GetUserById(id);
+            try
+            {
+                return _repo.GetUserById(id);
+            }
+            catch (Exception)
+            {
+                throw new Exception("An Error occured trying to fetch the user.");
+            }
         }
 
         public List<User> GetAllUsers()
         {
-            return _repo.GetAllUsers();
+            try
+            {
+                return _repo.GetAllUsers();
+            }
+            catch (Exception)
+            {
+                throw new Exception("An Error occured trying to fetch the users.");
+            }
         }
 
+
+        /// <summary>
+        /// Validates that the User entities information is correct.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="clearPass"></param>
         private void ValidateUserInformation(User user, string clearPass)
         {
             if (!ValidateEmail(user.Email)) throw new ArgumentException("Email not accepted!");
@@ -99,6 +123,11 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             if (_repo.CheckEmailInUse(user.Email)) throw new ArgumentException("Email already in use!"); // This is last, because it sends a request to DB.
         }
 
+        /// <summary>
+        /// Validates that the password is within the rules for it.
+        /// </summary>
+        /// <param name="password"></param>
+        /// <returns></returns>
         private bool ValidatePassword(string password)
         {
             if (password.Length < 8) return false;
@@ -106,6 +135,11 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             // Could add more checks here
         }
 
+
+        /// <summary>
+        /// Validates that the customer entity's information is correct.
+        /// </summary>
+        /// <param name="cust"></param>
         private void ValidateCustomerInformation(Customer cust)
         {
             if (string.IsNullOrEmpty(cust.Firstname)) throw new ArgumentException("Firstname null or empty!");
@@ -114,12 +148,22 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             if (cust.PhoneNumber.ToString().Length != 8) throw new ArgumentException("Invalid phone number!");
         }
 
+
+        /// <summary>
+        /// Validates that the email is an actual email.
+        /// </summary>
+        /// <param name="userEmail"></param>
+        /// <returns></returns>
         private bool ValidateEmail(string userEmail)
         {
             if (userEmail == null) return false;
             return CreateValidEmailRegex().IsMatch(userEmail);
         }
 
+        /// <summary>
+        /// Creates the regex used to validate an email address.
+        /// </summary>
+        /// <returns></returns>
         private static Regex CreateValidEmailRegex()
         {
             string validEmailPattern = @"^(?!\.)(""([^""\r\\]|\\[""\r\\])*""|"
@@ -128,6 +172,11 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             return new Regex(validEmailPattern, RegexOptions.IgnoreCase);
         }
 
+
+        /// <summary>
+        /// Generates a random 128bit string.
+        /// </summary>
+        /// <returns></returns>
         private static string GenerateSalt()
         {
             byte[] bytes = new byte[128 / 8];
@@ -138,6 +187,11 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
             }
         }
 
+        /// <summary>
+        /// Generates a one-way SHA256 hash from the input.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         private static string GenerateHash(string input)
         {
             using (var sha = SHA256Managed.Create())

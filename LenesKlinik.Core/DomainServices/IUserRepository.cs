@@ -37,8 +37,18 @@ namespace LenesKlinik.Core.DomainServices
         /// <returns></returns>
         User GetUserById(int userId);
 
+
+        /// <summary>
+        /// Updates the user entity in the DB.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         User UpdateUser(User user);
 
+        /// <summary>
+        /// Fetches and returns all users in the DB.
+        /// </summary>
+        /// <returns></returns>
         List<User> GetAllUsers();
     }
 }
