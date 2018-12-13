@@ -191,7 +191,8 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
         {
             try
             {
-                _emailService.SendMail("makeklinik@gmail.com", "Booking aflyst!", $"Booking d. {booking.EndTime} - {booking.EndTime.TimeOfDay} er blevet aflyst.");
+                _emailService.SendMail("makeklinik@gmail.com", "Booking aflyst!", 
+                    $"Booking d. {booking.StartTime.Date} {booking.StartTime.TimeOfDay} - {booking.EndTime.TimeOfDay} er blevet aflyst.");
                 _emailService.SendMail(booking.Customer.User.Email, "Booking aflyst!", GenerateEmailBody(booking));
             }
             catch (Exception)
@@ -203,7 +204,7 @@ namespace LenesKlinik.Core.ApplicationServices.Implementation
         private string GenerateEmailBody(Booking booking)
         {
             return $"Hej, {booking.Customer.Firstname}." +
-                   $"\nDin tid hos Lenes Klinik d. {booking.StartTime} - {booking.StartTime.TimeOfDay} er blevet aflyst." +
+                   $"\nDin tid hos Lenes Klinik d. {booking.StartTime.Date} {booking.StartTime.TimeOfDay} - {booking.EndTime.TimeOfDay} er blevet aflyst." +
                    "\nVi beklager ulejligheden." +
                    "\n\nMVH," +
                    "\nLenes Klinik.";
