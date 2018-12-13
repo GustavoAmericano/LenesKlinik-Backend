@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using LenesKlinik.Core.Entities;
 
 namespace LenesKlinik.Core.DomainServices
@@ -37,5 +38,7 @@ namespace LenesKlinik.Core.DomainServices
         User GetUserById(int userId);
 
         User UpdateUser(User user);
+
+        List<User> GetAllUsers();
     }
 }
