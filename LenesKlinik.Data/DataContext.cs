@@ -10,11 +10,6 @@ namespace LenesKlinik.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Customer>()
-            //    .HasOne(c => c.Type)
-            //    .WithMany(ct => ct.Customers)
-            //    .OnDelete(DeleteBehavior.SetNull);
-
             modelBuilder.Entity<Customer>()
                 .HasKey(cust => cust.Id);
 

@@ -147,16 +147,6 @@ namespace CoreTest.BookingTests
             Assert.Equal("Date was before today!",e.Message);
         }
 
-        [Fact]
-        public void GetAvailableBookingsWrongDurationExpectArgumentExceptionTest()
-        {
-            var workId = 3;
-
-            Exception e = Assert.Throws<ArgumentException>(() => _service.GetAvailableBookings(_date, workId));
-
-            Assert.Equal("Duration must be divisible by 15", e.Message);
-        }
-
         #endregion
 
         #region GET
